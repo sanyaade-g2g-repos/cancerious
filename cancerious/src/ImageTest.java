@@ -25,6 +25,7 @@ public class ImageTest extends JFrame {
 
 	public static void main(String[] args) {
 		new ImageTest().init();
+		int i;
 	}
 
 	private void init() {
