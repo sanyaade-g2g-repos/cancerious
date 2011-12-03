@@ -1,3 +1,4 @@
+package main;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +16,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  */
 public class ImageTest extends JFrame {
-
+	
 	private static final long serialVersionUID = 1L;
 
 	JButton uploadButton;
@@ -24,38 +25,34 @@ public class ImageTest extends JFrame {
 	String imagePath;
 
 	public static void main(String[] args) {
-		new ImageTest().init();
-		int i;
-		i=7;
+		new ImageTest();
 	}
-
-	private void init() {
-
+	
+	public ImageTest() {
+		
 		uploadButton = new JButton("Upload");
 		displayButton = new JButton("Display");
 		status = new JLabel("Waiting to load an image.");
 
 		uploadButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				uploadButtonAction();
 			}
 		});
 
 		displayButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				displayButtonAction();
 			}
 		});
 		displayButton.setEnabled(false);
 
-		this.setLayout(new GridLayout());
+		getContentPane().setLayout(new GridLayout());
 		this.setSize(500, 50);
 		this.setResizable(false);
-		this.add(uploadButton);
-		this.add(displayButton);
-		this.add(status);
+		getContentPane().add(uploadButton);
+		getContentPane().add(displayButton);
+		getContentPane().add(status);
 		
 		setVisible(true);
 
