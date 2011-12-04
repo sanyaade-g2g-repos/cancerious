@@ -7,8 +7,8 @@ public class ConfigurationManager {
 	public String dbStorePath;
 	
 	public ConfigurationManager(){
-		imageStorePath = "image_store";
-		featureStorePath = "feature_store";
-		dbStorePath = "neo4j_store";
+		imageStorePath = "target/classes/image_store";
+		featureStorePath = "target/classes/feature_store";
+		dbStorePath = "target/classes/neo4j_store";
 	}
 }

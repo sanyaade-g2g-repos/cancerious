@@ -1,5 +1,8 @@
 package main;
 
+import javax.swing.UIManager;
+import util.CanceriousLogger;
+
 import manager.*;
 
 public class CanceriousMain {
@@ -13,6 +16,13 @@ public class CanceriousMain {
 	private static GUIManager guiManager;
 	
 	private CanceriousMain(){
+		CanceriousLogger.info("Initializing cancerious...");
+		try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		configurationManager = new ConfigurationManager();
 		emailManager = new EmailManager();
 		featureManager = new FeatureManager();

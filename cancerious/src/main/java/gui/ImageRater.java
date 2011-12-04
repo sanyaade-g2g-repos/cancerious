@@ -15,6 +15,8 @@ import entity.Similarity;
 
 public class ImageRater extends JPanel {
 
+	private static final long serialVersionUID = 5740834522108481942L;
+
 	public ImageRater(Image image, Similarity similarity) {
 		super();
 		setLayout(new BorderLayout(0, 0));
@@ -43,7 +45,6 @@ public class ImageRater extends JPanel {
 		slider.setMaximum(4);
 		add(slider, BorderLayout.SOUTH);
 		
-		// TODO Auto-generated constructor stub
 	}
 
 }

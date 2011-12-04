@@ -14,11 +14,17 @@ public class Image {
 	public File fileHandler;
 	
 	public void openHandler(){
-		fileHandler = new File(CanceriousMain.getInstance().getConfigurationManager().imageStorePath+File.separator+filename);
+		fileHandler = new File(CanceriousMain.getConfigurationManager().imageStorePath+File.separator+filename);
 	}
 	
 	public void closeHandler(){
 		fileHandler = null;
 	}
 	
+	public Image(){
+		
+	}
+	public Image(String fileName){
+		this.filename = fileName;
+	}
 }
