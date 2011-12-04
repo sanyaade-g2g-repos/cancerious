@@ -6,20 +6,11 @@ public class CanceriousMain {
 
 	private static CanceriousMain instance;
 	
-	public ConfigurationManager configurationManager;
-	public EmailManager emailManager;
-	public FeatureManager featureManager;
-	public GraphManager graphManager;
-	public GUIManager guiManager;
-	
-	public static CanceriousMain getInstance(){
-		return instance;
-	}
-	
-	
-	public static void main(String[] args){
-		instance = new CanceriousMain();
-	}
+	private static ConfigurationManager configurationManager;
+	private static EmailManager emailManager;
+	private static FeatureManager featureManager;
+	private static GraphManager graphManager;
+	private static GUIManager guiManager;
 	
 	private CanceriousMain(){
 		configurationManager = new ConfigurationManager();
@@ -27,7 +18,33 @@ public class CanceriousMain {
 		featureManager = new FeatureManager();
 		graphManager = new GraphManager();
 		guiManager = new GUIManager();
-		
-		guiManager.setVisible(true);
+	}
+	
+	public static CanceriousMain getInstance(){
+		return instance;
+	}
+
+	public static ConfigurationManager getConfigurationManager() {
+		return configurationManager;
+	}
+
+	public static EmailManager getEmailManager() {
+		return emailManager;
+	}
+
+	public static FeatureManager getFeatureManager() {
+		return featureManager;
+	}
+
+	public static GraphManager getGraphManager() {
+		return graphManager;
+	}
+
+	public static GUIManager getGuiManager() {
+		return guiManager;
+	}
+	
+	public static void main(String[] args){
+		instance = new CanceriousMain();
 	}
 }
