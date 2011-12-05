@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import main.CanceriousMain;
@@ -120,19 +121,28 @@ public class GraphManager {
 	
 	public Image getNextImageForMatching(){
 		if(imageSet!=null){
-			return imageSet.iterator().next();
+			Random r = new Random();
+			return imageSet.get(r.nextInt(imageSet.size()));
 		}
 		else
 			return null;
 	}
 	
-	public Image[] getImagesToMatch(Image img){
-		Image[] arr = new Image[5];
+	public Image[] getImagesToMatch(Image img, int size){
+		Image[] arr = new Image[size];
 		int in=0;
-		for (int i=0;i<imageSet.size();i++){
-			Image img2 = imageSet.get(i);
-			if(img2.filename!=img.filename && in<arr.length){
-				arr[in++]=img2;
+		Random r = new Random();
+		Set<Integer> rndSet = new HashSet<Integer>();
+		while(in<arr.length){
+			int rnd = r.nextInt(imageSet.size());
+			rndSet.add(rnd);
+			if(rndSet.size()==in+1){
+				if(!imageSet.get(rnd).filename.equals(img.filename)){
+					arr[in++]=imageSet.get(rnd);
+				}
+				else{
+					rndSet.remove(rnd);
+				}
 			}
 		}
 		return arr;

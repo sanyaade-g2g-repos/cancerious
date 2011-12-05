@@ -33,16 +33,17 @@ public class ImageRater extends JPanel {
 		add(label);
 		
 		JSlider slider = new JSlider();
+		slider.setSnapToTicks(true);
+		slider.setPaintLabels(true);
+		slider.setMajorTickSpacing(1);
+		slider.setMinimum(-1);
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				//TODO change similarity value here
 			}
 		});
-		slider.setPaintLabels(true);
-		slider.setMajorTickSpacing(1);
-		slider.setSnapToTicks(true);
-		slider.setValue(1);
-		slider.setMaximum(4);
+		slider.setValue(0);
+		slider.setMaximum(3);
 		add(slider, BorderLayout.SOUTH);
 		
 	}
