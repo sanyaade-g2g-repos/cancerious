@@ -9,12 +9,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import entity.Image;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ImageToMatch extends JPanel {
 	public ImageToMatch(Image image) {
 		setLayout(new BorderLayout(0, 0));
 		
 		JButton btnNextImage = new JButton("Next Image");
+		btnNextImage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				nextImage();
+			}
+		});
 		add(btnNextImage, BorderLayout.SOUTH);
 		
 		JLabel label = new JLabel("");
@@ -27,6 +34,10 @@ public class ImageToMatch extends JPanel {
 			e.printStackTrace();
 		}
 		add(label, BorderLayout.CENTER);
+	}
+	
+	public void nextImage(){
+		((MatchImagesPanel)this.getParent()).nextImage();
 	}
 
 	private static final long serialVersionUID = -2492212483685159320L;

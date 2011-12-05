@@ -14,16 +14,21 @@ import manager.GraphManager.CanceriousRelationships;
 public class MatchImagesPanel extends JPanel {
 	public MatchImagesPanel() {
 		GridBagLayout gbl_matchImages = new GridBagLayout();
-		gbl_matchImages.columnWidths = new int[] { 0, 0, 0 };
-		gbl_matchImages.rowHeights = new int[] { 0, 0, 0 };
-		gbl_matchImages.columnWeights = new double[] { 0.0, 0.0, 0.0 };
-		gbl_matchImages.rowWeights = new double[] { 0.0, 0.0, 0.0 };
+		gbl_matchImages.columnWidths = new int[] { 200, 200, 200 };
+		gbl_matchImages.rowHeights = new int[] { 200, 200};
+		gbl_matchImages.columnWeights = new double[] { 1.0, 1.0, 1.0 };
+		gbl_matchImages.rowWeights = new double[] { 1.0, 1.0};
 		this.setLayout(gbl_matchImages);
 		
-		GridBagConstraints gbc;
+		nextImage();
+	}
+	
+	public void nextImage(){
+		this.removeAll();
 		
+		GridBagConstraints gbc;
 		Image img = CanceriousMain.getGraphManager().getNextImageForMatching();
-		Image[] similarImages = CanceriousMain.getGraphManager().getImagesToMatch(img);
+		Image[] similarImages = CanceriousMain.getGraphManager().getImagesToMatch(img,5);
 		
 		ImageToMatch imageToMatch = new ImageToMatch(img);
 		gbc = new GridBagConstraints();
@@ -61,7 +66,6 @@ public class MatchImagesPanel extends JPanel {
 		gbc.gridx = 2;
 		gbc.gridy = 1;
 		this.add(rater, gbc);
-		
 	}
 
 	private static final long serialVersionUID = 8185724226211637533L;
