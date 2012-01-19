@@ -1,121 +1,226 @@
 package manager;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import main.CanceriousMain;
-
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.index.Index;
-import org.neo4j.kernel.EmbeddedGraphDatabase;
-
+import util.BidirectionalAdjecencyMatrix;
 import util.CanceriousLogger;
+import entity.Feature;
 import entity.Image;
 
 public class GraphManager {
 
-	public enum CanceriousRelationships implements RelationshipType
-	{
-	    SIMILAR_TO, IMAGE_REFERENCE, IMAGE;
-	}
-	public static final String FILENAME_KEY = "fileName";
-	
-	
-	
 	public List<Image> imageSet;
-	public List<String> fileNameList;
+	public List<Feature> featureList;
 	
-	private GraphDatabaseService db;
-	private Index<Node> nodeIndex;
+	
+	private BidirectionalAdjecencyMatrix featureSimilarities;
+	
+	private BidirectionalAdjecencyMatrix choices;
+	
+	private boolean reCalculateAllFeatures;
 	
 	public GraphManager(){
-		db = new EmbeddedGraphDatabase(CanceriousMain.getConfigurationManager().dbStorePath);
+		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				CanceriousLogger.info("Shutting down neo4j...");
-				db.shutdown();
+				CanceriousLogger.info("Shutting down...");
+				//TODO save user choices to file then exit. 
 			}
 		});
-		nodeIndex = db.index().forNodes("image");
-		loadAllImagesWithTransaction();
+		
+		//load images
+		loadAllImages();
+		
+		//load features
+		loadFeatures();
+		
+		//calculate similarities if necessary
+		
+		//if not necessary, then load similarity file
 	}
 	
-	public void reloadAllImagesWithTransaction(){
-		Transaction t = db.beginTx();
+	private void loadFeatures() {
+		// TODO Auto-generated method stub
+		File featureStore = CanceriousMain.getConfigurationManager().featureStore;
+		if(!featureStore.isDirectory()){
+			CanceriousLogger.warn("feature store is not a directory.");
+			return;
+		}
+		//init feature_store.txt
+		File storeTxt = new File(featureStore, "feature_store.txt");
+		if(!storeTxt.exists()){
+			CanceriousLogger.warn("feature_store.txt file inside feature store dir does not exist.");
+			return;
+		}
+		
+		File featureCache = new File(CanceriousMain.getConfigurationManager().dataStore, "feature_cache.txt");
+		String storeLine;
+		BufferedReader storeReader = null;
 		try{
-			nodeIndex.delete();
-			nodeIndex = db.index().forNodes("image");
-			loadAllImages();
-			t.success();
+			storeReader = new BufferedReader(new FileReader(storeTxt));
 		}
-		finally{
-			t.finish();
-		}
-	}
-	
-	public void loadAllImages(){
-		fileNameList = new ArrayList<String>();
-		
-		File imageStoreDir = new File(CanceriousMain.getConfigurationManager().imageStorePath);
-		
-		//create or get imageReferenceNode for easy traversal. 
-		Node imageReferenceNode; 
-		Relationship refRel = db.getReferenceNode().getSingleRelationship(CanceriousRelationships.IMAGE_REFERENCE, Direction.OUTGOING);
-		if(refRel == null){
-			imageReferenceNode = db.createNode();
-			db.getReferenceNode().createRelationshipTo(imageReferenceNode, CanceriousRelationships.IMAGE_REFERENCE);
-		}
-		else{
-			imageReferenceNode = refRel.getEndNode();
+		catch (Exception e) {
+			CanceriousLogger.error(e);
 		}
 		
-		if(imageStoreDir.isDirectory()){
-			imageSet = new ArrayList<Image>();
-			for (File f:imageStoreDir.listFiles()){
-				if(f.isFile()){
-					fileNameList.add(f.getName());
-					
-					//check index if filename exists, if no, add to index, if yes, skip. 
-					Node n = nodeIndex.get(FILENAME_KEY, f.getName()).getSingle();
-					if(n==null){
-						//add index here
-						CanceriousLogger.info("adding image to index");
-						n = db.createNode();
-						n.setProperty(FILENAME_KEY, f.getName());
-						nodeIndex.add(n, FILENAME_KEY, f.getName());
-						imageReferenceNode.createRelationshipTo(n, CanceriousRelationships.IMAGE);
-						
+		if(featureCache.exists()){
+			String cacheLine;
+			BufferedReader cacheReader = null;
+			try{
+				cacheReader = new BufferedReader(new FileReader(featureCache));
+			}
+			catch (Exception e) {
+				CanceriousLogger.error(e);
+			}
+			while(true){
+				try{
+					cacheLine = cacheReader.readLine();
+					storeLine = storeReader.readLine();					
+				} catch (IOException e) {
+					CanceriousLogger.error(e);
+					continue;
+				}
+				if(cacheLine == null && storeLine == null){
+					reCalculateAllFeatures = false;
+					break;
+				}
+				else if (cacheLine != null && storeLine != null){
+					StringTokenizer cacheToken = new StringTokenizer(cacheLine,",");
+					String cacheFileName = cacheToken.nextToken();
+					String cacheFileHash = cacheToken.nextToken();
+					if(!storeLine.equals(cacheFileName)){
+						reCalculateAllFeatures = true;
+						break;
 					}
-					
-					Image i = new Image();
-					i.filename = f.getName();
-					imageSet.add(i);
+					String realFileHash;
+					try {
+						FileInputStream fis = new FileInputStream( new File(featureStore, cacheFileName) );
+						realFileHash = org.apache.commons.codec.digest.DigestUtils.md5Hex( fis );
+					} catch (FileNotFoundException e) {
+						CanceriousLogger.error(e);
+						reCalculateAllFeatures = true;
+						break;
+					} catch (IOException e) {
+						CanceriousLogger.error(e);
+						reCalculateAllFeatures = true;
+						break;
+					}
+					if(!realFileHash.equals(cacheFileHash)){
+						reCalculateAllFeatures = true;
+						break;
+					}
+				}
+				else{
+					reCalculateAllFeatures = true;
+					break;
 				}
 			}
+			cacheReader.close();
 		}
-		else{
-			CanceriousLogger.warn("image store is not a directory.");
+		else{ //feature cache does not exist yet. 
+			reCalculateAllFeatures = true;
+		}
+		
+		//read ALL features from ALL filenames in feature store and put the values to image objects in the set. 
+		if(reCalculateAllFeatures){
+			
+			while(true){ //for each file
+				try {
+					storeLine = storeReader.readLine();
+				} catch (IOException e) {
+					CanceriousLogger.error(e);
+					continue;
+				}
+				if(storeLine==null){
+					break;
+				}
+				File featureFile = new File(featureStore, storeLine);
+				if(!featureFile.exists()){
+					CanceriousLogger.warn(String.format("File %s does not exist. ", storeLine));
+					continue;
+				}
+				StringTokenizer featureLineToken;
+				BufferedReader featureFileReader = new BufferedReader(new FileReader(featureFile));
+				String featureLine;
+				boolean firstLine = true;
+				
+				while(true){ //for each line in a file
+					featureLine = featureFileReader.readLine();
+					if(featureFile==null){
+						break;
+					}
+					featureLineToken = new StringTokenizer(featureLine,",");
+					if(firstLine){
+						Feature f = new Feature(featureLineToken.nextToken(),Integer.parseInt(featureLineToken.nextToken()));
+						featureList.add(f);
+						firstLine=false;
+					}
+					else{
+						
+					}
+				}
+				
+
+			}
 		}
 	}
-	
-	public void loadAllImagesWithTransaction(){
-		Transaction t = db.beginTx();
-		try{
-			loadAllImages();
-			t.success();
+
+	public void loadAllImages(){
+		//init image set
+		imageSet = new ArrayList<Image>();
+		//init image store dir
+		File imageStoreDir = CanceriousMain.getConfigurationManager().imageStore;
+		if(!imageStoreDir.isDirectory()){
+			CanceriousLogger.warn("image store is not a directory.");
+			return;
 		}
-		finally{
-			t.finish();
+		//init image_store.txt
+		File storeTxt = new File(imageStoreDir, "image_store.txt");
+		if(!storeTxt.exists()){
+			CanceriousLogger.warn("image_store.txt file inside image store dir does not exist.");
+			return;
+		}
+		//read image_store.txt
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(storeTxt));
+		} catch (FileNotFoundException e1) {
+			//cannot happen.
+			CanceriousLogger.error(e1);
+			return;
+		}
+		String line;
+		while(true){
+			try {
+				line = reader.readLine();
+			} catch (IOException e) {
+				CanceriousLogger.error(e);
+				continue;
+			}
+			if(line==null){
+				break;
+			}
+			File imgFile = new File(imageStoreDir, line);
+			if(!imgFile.exists()){
+				CanceriousLogger.warn(String.format("File %s does not exist. ", line));
+				continue;
+			}
+			Image img = new Image();
+			img.filename = line;
+			imageSet.add(img);
 		}
 	}
 	

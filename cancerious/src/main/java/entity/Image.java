@@ -10,11 +10,10 @@ public class Image {
 	public Integer id;
 	public String filename;
 	public Set<FeatureValue> featureValues;
-	public Set<Similarity> similarities;
 	public File fileHandler;
 	
 	public void openHandler(){
-		fileHandler = new File(CanceriousMain.getConfigurationManager().imageStorePath+File.separator+filename);
+		fileHandler = new File(CanceriousMain.getConfigurationManager().imageStore, filename);
 	}
 	
 	public void closeHandler(){
