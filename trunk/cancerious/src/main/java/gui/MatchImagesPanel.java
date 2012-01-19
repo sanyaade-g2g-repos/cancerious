@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import entity.Image;
 
 import main.CanceriousMain;
-import manager.GraphManager.CanceriousRelationships;
 
 public class MatchImagesPanel extends JPanel {
 	public MatchImagesPanel() {

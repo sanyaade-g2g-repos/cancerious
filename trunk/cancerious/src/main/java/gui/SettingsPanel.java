@@ -86,7 +86,7 @@ public class SettingsPanel extends JPanel {
 		});
 		this.add(featureStoreBrowse, "6, 4");
 
-		JLabel lblDbStoreLocation = new JLabel("DB Store Location");
+		JLabel lblDbStoreLocation = new JLabel("Cancerious Data Storage");
 		add(lblDbStoreLocation, "2, 6, right, default");
 
 		dbStoreField = new JTextField(CanceriousMain.getConfigurationManager().dbStorePath);
