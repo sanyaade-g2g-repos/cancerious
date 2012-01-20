@@ -1,0 +1,6 @@
+features_color_graphs_25
+features_colorless_graphs
+features_cooccurrence_matrices_8_20
+features_delaunay_triangulations
+features_gray_level_histograms
+features_runlength_matrices_8
