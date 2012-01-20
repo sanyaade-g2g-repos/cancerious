@@ -1,10 +1,14 @@
 package entity;
 
-import java.util.List;
 
 public class FeatureValue {
 
+	public FeatureValue(Feature feature, double value) {
+		super();
+		this.feature = feature;
+		this.value = value;
+	}
 	public Feature feature;
-	public List<Double> values;
+	public double value;
 	
 }
