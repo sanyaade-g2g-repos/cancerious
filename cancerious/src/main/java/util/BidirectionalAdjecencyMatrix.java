@@ -1,6 +1,10 @@
 package util;
 
-public class BidirectionalAdjecencyMatrix {
+import java.io.Serializable;
+
+public class BidirectionalAdjecencyMatrix implements Serializable{
+
+	private static final long serialVersionUID = 3608589617663227922L;
 
 	private double[][] matrix;
 	

@@ -1,25 +1,31 @@
 package manager;
 
-import java.io.File;
+import java.net.URL;
 
 public class ConfigurationManager {
 
-	public File imageStore;
-	public File featureStore;
-	public File dataStore;
+//	public File imageStore;
+//	public File featureStore;
+//	public File dataStore;
 	
 	private String imageStorePath;
 	private String featureStorePath;
 	private String dbStorePath;
 	
+	public URL dbStoreURL, imageStoreURL, featureStoreURL;
+	
 	public ConfigurationManager(){
-		imageStorePath = "target/classes/image_store";
-		featureStorePath = "target/classes/feature_store";
-		dbStorePath = "target/classes/cancerious_store";
+		imageStorePath = "/image_store";
+		featureStorePath = "/feature_store";
+		dbStorePath = "/cancerious_store";
 		
-		imageStore = new File(imageStorePath);
-		featureStore = new File(featureStorePath);
-		dataStore = new File(dbStorePath);
+		dbStoreURL = ConfigurationManager.class.getResource(dbStorePath);
+		imageStoreURL = ConfigurationManager.class.getResource(imageStorePath);
+		featureStoreURL = ConfigurationManager.class.getResource(featureStorePath);
+		
+//		imageStore = new File(imageStorePath);
+//		featureStore = new File(featureStorePath);
+//		dataStore = new File(dbStorePath);
 		
 	}
 }

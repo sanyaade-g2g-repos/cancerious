@@ -13,7 +13,7 @@ public class Image {
 	public File fileHandler;
 	
 	public void openHandler(){
-		fileHandler = new File(CanceriousMain.getConfigurationManager().imageStore, filename);
+		fileHandler = new File(CanceriousMain.getConfigurationManager().imageStoreURL.getFile(), filename);
 	}
 	
 	public void closeHandler(){

@@ -3,6 +3,7 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.MalformedURLException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -10,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import util.CanceriousLogger;
 
 import main.CanceriousMain;
 
@@ -37,7 +40,7 @@ public class SettingsPanel extends JPanel {
 		JLabel lblImageStoreLocation = new JLabel("Image Store Location");
 		this.add(lblImageStoreLocation, "2, 2, right, default");
 
-		imageStoreField = new JTextField(CanceriousMain.getConfigurationManager().imageStorePath);
+		imageStoreField = new JTextField(CanceriousMain.getConfigurationManager().imageStoreURL.getPath());
 		this.add(imageStoreField, "4, 2, fill, default");
 		imageStoreField.setColumns(10);
 
@@ -52,7 +55,13 @@ public class SettingsPanel extends JPanel {
 					if (!file.isDirectory()) {
 						JOptionPane.showMessageDialog(CanceriousMain.getGuiManager(), "Please specify a directory. ");
 					} else {
-						CanceriousMain.getConfigurationManager().imageStorePath = file.getPath();
+						try {
+							CanceriousMain.getConfigurationManager().imageStoreURL = file.toURI().toURL();
+						} catch (MalformedURLException e) {
+							JOptionPane.showMessageDialog(SettingsPanel.this, "Image store is invalid.");
+							CanceriousLogger.warn(e);
+						}
+						//TODO RELOAD?
 						imageStoreField.setText(file.getPath());
 					}
 				}
@@ -63,7 +72,7 @@ public class SettingsPanel extends JPanel {
 		JLabel lblDataStoreLocation = new JLabel("Feature Store Location");
 		this.add(lblDataStoreLocation, "2, 4, right, default");
 
-		featureStoreField = new JTextField(CanceriousMain.getConfigurationManager().featureStorePath);
+		featureStoreField = new JTextField(CanceriousMain.getConfigurationManager().featureStoreURL.getPath());
 		this.add(featureStoreField, "4, 4, fill, default");
 		featureStoreField.setColumns(10);
 
@@ -78,7 +87,13 @@ public class SettingsPanel extends JPanel {
 					if (!file.isDirectory()) {
 						JOptionPane.showMessageDialog(CanceriousMain.getGuiManager(), "Please specify a directory. ");
 					} else {
-						CanceriousMain.getConfigurationManager().featureStorePath = file.getPath();
+						try {
+							CanceriousMain.getConfigurationManager().featureStoreURL = file.toURI().toURL();
+						} catch (MalformedURLException e) {
+							JOptionPane.showMessageDialog(SettingsPanel.this, "Feature store is invalid.");
+							CanceriousLogger.warn(e);
+						}
+						//TODO LOAD FEATURES? 
 						featureStoreField.setText(file.getPath());
 					}
 				}
@@ -89,7 +104,7 @@ public class SettingsPanel extends JPanel {
 		JLabel lblDbStoreLocation = new JLabel("Cancerious Data Storage");
 		add(lblDbStoreLocation, "2, 6, right, default");
 
-		dbStoreField = new JTextField(CanceriousMain.getConfigurationManager().dbStorePath);
+		dbStoreField = new JTextField(CanceriousMain.getConfigurationManager().dbStoreURL.getPath());
 		add(dbStoreField, "4, 6, fill, default");
 		dbStoreField.setColumns(10);
 
