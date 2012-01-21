@@ -10,5 +10,6 @@ public class FeatureValue {
 	}
 	public Feature feature;
 	public double value;
+	public double normalizedValue;
 	
 }

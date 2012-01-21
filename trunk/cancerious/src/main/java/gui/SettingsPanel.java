@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import util.CanceriousLogger;
 
 import main.CanceriousMain;
+import manager.ConfigurationManager;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -27,6 +28,9 @@ public class SettingsPanel extends JPanel {
 
 	public SettingsPanel() {
 		super();
+
+		ConfigurationManager conf = CanceriousMain.getConfigurationManager();
+
 		this.setLayout(new FormLayout(
 				new ColumnSpec[] { FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
 						FormFactory.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"),
@@ -40,7 +44,7 @@ public class SettingsPanel extends JPanel {
 		JLabel lblImageStoreLocation = new JLabel("Image Store Location");
 		this.add(lblImageStoreLocation, "2, 2, right, default");
 
-		imageStoreField = new JTextField(CanceriousMain.getConfigurationManager().imageStoreURL.getPath());
+		imageStoreField = new JTextField(CanceriousMain.getConfigurationManager().imageStorePath);
 		this.add(imageStoreField, "4, 2, fill, default");
 		imageStoreField.setColumns(10);
 
@@ -55,12 +59,12 @@ public class SettingsPanel extends JPanel {
 					if (!file.isDirectory()) {
 						JOptionPane.showMessageDialog(CanceriousMain.getGuiManager(), "Please specify a directory. ");
 					} else {
-						try {
-							CanceriousMain.getConfigurationManager().imageStoreURL = file.toURI().toURL();
-						} catch (MalformedURLException e) {
-							JOptionPane.showMessageDialog(SettingsPanel.this, "Image store is invalid.");
-							CanceriousLogger.warn(e);
-						}
+//						try {
+//							//TODO CanceriousMain.getConfigurationManager().imageStoreURL = file.toURI().toURL();
+//						} catch (MalformedURLException e) {
+//							JOptionPane.showMessageDialog(SettingsPanel.this, "Image store is invalid.");
+//							CanceriousLogger.warn(e);
+//						}
 						//TODO RELOAD?
 						imageStoreField.setText(file.getPath());
 					}
@@ -72,7 +76,7 @@ public class SettingsPanel extends JPanel {
 		JLabel lblDataStoreLocation = new JLabel("Feature Store Location");
 		this.add(lblDataStoreLocation, "2, 4, right, default");
 
-		featureStoreField = new JTextField(CanceriousMain.getConfigurationManager().featureStoreURL.getPath());
+		featureStoreField = new JTextField(CanceriousMain.getConfigurationManager().featureStorePath);
 		this.add(featureStoreField, "4, 4, fill, default");
 		featureStoreField.setColumns(10);
 
@@ -87,12 +91,12 @@ public class SettingsPanel extends JPanel {
 					if (!file.isDirectory()) {
 						JOptionPane.showMessageDialog(CanceriousMain.getGuiManager(), "Please specify a directory. ");
 					} else {
-						try {
-							CanceriousMain.getConfigurationManager().featureStoreURL = file.toURI().toURL();
-						} catch (MalformedURLException e) {
-							JOptionPane.showMessageDialog(SettingsPanel.this, "Feature store is invalid.");
-							CanceriousLogger.warn(e);
-						}
+//						try {
+//							//TODO CanceriousMain.getConfigurationManager().featureStoreURL = file.toURI().toURL();
+//						} catch (MalformedURLException e) {
+//							JOptionPane.showMessageDialog(SettingsPanel.this, "Feature store is invalid.");
+//							CanceriousLogger.warn(e);
+//						}
 						//TODO LOAD FEATURES? 
 						featureStoreField.setText(file.getPath());
 					}
@@ -104,7 +108,7 @@ public class SettingsPanel extends JPanel {
 		JLabel lblDbStoreLocation = new JLabel("Cancerious Data Storage");
 		add(lblDbStoreLocation, "2, 6, right, default");
 
-		dbStoreField = new JTextField(CanceriousMain.getConfigurationManager().dbStoreURL.getPath());
+		dbStoreField = new JTextField(CanceriousMain.getConfigurationManager().dbStorePath);
 		add(dbStoreField, "4, 6, fill, default");
 		dbStoreField.setColumns(10);
 

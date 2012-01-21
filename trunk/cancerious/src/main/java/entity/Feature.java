@@ -8,6 +8,8 @@ public class Feature {
 	public String name;
 	public int priority;
 	public List<FeatureValue> values;
+	public double mean;
+	public double stddev;
 
 	public Feature(String name, int priority) {
 		super();
