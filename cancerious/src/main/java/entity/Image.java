@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Set;
 
 import main.CanceriousMain;
@@ -13,17 +14,15 @@ public class Image {
 	public File fileHandler;
 	
 	public void openHandler(){
-		fileHandler = new File(CanceriousMain.getConfigurationManager().imageStoreURL.getFile(), filename);
+		fileHandler = CanceriousMain.getConfigurationManager().getImageAsFile(filename);
 	}
 	
 	public void closeHandler(){
 		fileHandler = null;
 	}
 	
-	public Image(){
-		
-	}
 	public Image(String fileName){
 		this.filename = fileName;
+		featureValues = new HashSet<FeatureValue>();
 	}
 }
