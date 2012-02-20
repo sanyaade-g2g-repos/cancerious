@@ -3,7 +3,6 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.net.MalformedURLException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -11,8 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import util.CanceriousLogger;
 
 import main.CanceriousMain;
 import manager.ConfigurationManager;
@@ -29,6 +26,7 @@ public class SettingsPanel extends JPanel {
 	public SettingsPanel() {
 		super();
 
+		@SuppressWarnings("unused")
 		ConfigurationManager conf = CanceriousMain.getConfigurationManager();
 
 		this.setLayout(new FormLayout(
@@ -50,6 +48,7 @@ public class SettingsPanel extends JPanel {
 
 		JButton imageStoreBrowse = new JButton("Browse");
 		imageStoreBrowse.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -59,12 +58,12 @@ public class SettingsPanel extends JPanel {
 					if (!file.isDirectory()) {
 						JOptionPane.showMessageDialog(CanceriousMain.getGuiManager(), "Please specify a directory. ");
 					} else {
-//						try {
-//							//TODO CanceriousMain.getConfigurationManager().imageStoreURL = file.toURI().toURL();
-//						} catch (MalformedURLException e) {
-//							JOptionPane.showMessageDialog(SettingsPanel.this, "Image store is invalid.");
-//							CanceriousLogger.warn(e);
-//						}
+						//						try {
+						//							//TODO CanceriousMain.getConfigurationManager().imageStoreURL = file.toURI().toURL();
+						//						} catch (MalformedURLException e) {
+						//							JOptionPane.showMessageDialog(SettingsPanel.this, "Image store is invalid.");
+						//							CanceriousLogger.warn(e);
+						//						}
 						//TODO RELOAD?
 						imageStoreField.setText(file.getPath());
 					}
@@ -82,6 +81,7 @@ public class SettingsPanel extends JPanel {
 
 		JButton featureStoreBrowse = new JButton("Browse");
 		featureStoreBrowse.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -91,12 +91,12 @@ public class SettingsPanel extends JPanel {
 					if (!file.isDirectory()) {
 						JOptionPane.showMessageDialog(CanceriousMain.getGuiManager(), "Please specify a directory. ");
 					} else {
-//						try {
-//							//TODO CanceriousMain.getConfigurationManager().featureStoreURL = file.toURI().toURL();
-//						} catch (MalformedURLException e) {
-//							JOptionPane.showMessageDialog(SettingsPanel.this, "Feature store is invalid.");
-//							CanceriousLogger.warn(e);
-//						}
+						//						try {
+						//							//TODO CanceriousMain.getConfigurationManager().featureStoreURL = file.toURI().toURL();
+						//						} catch (MalformedURLException e) {
+						//							JOptionPane.showMessageDialog(SettingsPanel.this, "Feature store is invalid.");
+						//							CanceriousLogger.warn(e);
+						//						}
 						//TODO LOAD FEATURES? 
 						featureStoreField.setText(file.getPath());
 					}
@@ -120,6 +120,7 @@ public class SettingsPanel extends JPanel {
 
 		JButton btnReload = new JButton("Reload");
 		btnReload.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
