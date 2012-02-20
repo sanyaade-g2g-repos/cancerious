@@ -1,6 +1,5 @@
 package manager;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,15 +31,15 @@ public class GraphManager {
 
 	public List<Image> imageSet;
 	public List<Feature> featureList;
-	
+
 	private BidirectionalAdjecencyMatrix featureSimilarities;
-	
+
 	private BidirectionalAdjecencyMatrix choices;
-	
+
 	private boolean reCalculateAllFeatures;
-	
+
 	public GraphManager(){
-		
+
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -48,20 +47,20 @@ public class GraphManager {
 				//TODO save user choices to file then exit. 
 			}
 		});
-		
+
 		//load images
 		loadAllImages();
-		
+
 		//load features
 		loadFeatures();
-		
+
 		//load choices
 		readChoices();
 	}
-	
+
 	private void loadFeatures() {
 		ConfigurationManager conf = CanceriousMain.getConfigurationManager();
-		
+
 		//init feature_store.txt
 		File storeTxt = conf.getFeatureAsFile("feature_store.txt");
 		if(!storeTxt.exists()){
@@ -78,7 +77,7 @@ public class GraphManager {
 		catch (Exception e) {
 			CanceriousLogger.error(e);
 		}
-		
+
 		if(featureCache!=null && featureCache.exists()){
 			String cacheLine;
 			BufferedReader cacheReader = null;
@@ -140,10 +139,10 @@ public class GraphManager {
 		else{ //feature cache does not exist yet. 
 			reCalculateAllFeatures = true;
 		}
-		
+
 		//read ALL features from ALL filenames in feature store and put the values to image objects in the set. 
 		if(reCalculateAllFeatures){
-			
+
 			while(true){ //for each file
 				try {
 					storeLine = storeReader.readLine();
@@ -173,7 +172,7 @@ public class GraphManager {
 				Queue<Integer> priorities = null ;
 				List<Feature> featureListForFile = new ArrayList<Feature>();
 				featureList = new ArrayList<Feature>();
-				
+
 				while(true){ //for each line in a file
 					try {
 						featureLine = featureFileReader.readLine();
@@ -237,7 +236,7 @@ public class GraphManager {
 				}//bir feature dosyası tamamen okundu.
 			}//tüm feature dosyaları okundu
 			CanceriousLogger.info("Feature reading complete");
-			
+
 			//NORMALIZE ALL FEATURE VALUES
 			for (Feature feature : featureList) {
 				//NORMALIZATION
@@ -256,13 +255,15 @@ public class GraphManager {
 				}
 			}
 			CanceriousLogger.info("Normalization complete");
-			
+
 			//TODO FEATURELARIN BİRBİRİ ARASINDAKİ BENZERLİK HESAPLAMASI BURADA
 			featureSimilarities = new BidirectionalAdjecencyMatrix(imageSet.size());
 			for (int i = 0; i < imageSet.size(); i++) {
 				Image imageI = imageSet.get(i);
 				for (int j = i; j < imageSet.size(); j++) {
-					if (i == j) continue;
+					if (i == j) {
+						continue;
+					}
 					// feature değerlerini karşılaştırıp priorityi de işin içine katarak değerleri hesapla.
 					Image imageJ = imageSet.get(j);
 					double total=0.0;
@@ -284,8 +285,8 @@ public class GraphManager {
 				}
 			}
 			CanceriousLogger.info("Similarity calculation complete");
-			
-			
+
+
 			//BENZERLİKLER (ADJ.MATRIX) BİR DOSYAYA YAZILIYOR.  
 			try {
 				CanceriousLogger.info(conf.getDatabaseFileAsFile(".").getPath());
@@ -300,10 +301,10 @@ public class GraphManager {
 				return;
 			}
 			CanceriousLogger.info("Similarities are written to file");
-			
+
 			//TODO FEATURE_CACHE.TXT WRITE
 			//CanceriousLogger.info("Feature cache updated");
-			
+
 		}//imajların benzerlik hesaplaması tamamlandı, dosyaya yazıldı ve cache update edildi
 		else{ //benzerlik hesaplaması zaten mevcut ve güncel. dosyadan oku.
 			try {
@@ -321,17 +322,17 @@ public class GraphManager {
 			}
 			CanceriousLogger.info("Similarities are written to file");
 		}
-		
+
 		for (Image img : imageSet) {
 			img.featureValues = null;
 		}
-		
+
 		for (Feature f : featureList) {
 			f.values = null;
 		}
-		
+
 		CanceriousLogger.info("Features are locked and loaded");
-		
+
 	}//feature okuma ve benzerlik hesaplaması işlemleri tamamlandı
 
 	public void loadAllImages(){
@@ -375,34 +376,34 @@ public class GraphManager {
 			imageSet.add(img);
 		}
 	}
-	
+
 	public Image getNextImageForMatching(){
 		Random r = new Random();
 		return imageSet.get(r.nextInt(imageSet.size()));
-		
-//		int index = choices.getLeastEdgedVertice();
-//		return imageSet.get(index);
+
+		//		int index = choices.getLeastEdgedVertice();
+		//		return imageSet.get(index);
 	}
-	
+
 	public Image[] getImagesToMatch(Image img, int size){
-//		Image[] arr = new Image[size];
-//		int in=0;
-//		Random r = new Random();
-//		Set<Integer> rndSet = new HashSet<Integer>();
-//		while(in<arr.length){
-//			int rnd = r.nextInt(imageSet.size());
-//			rndSet.add(rnd);
-//			if(rndSet.size()==in+1){
-//				if(!imageSet.get(rnd).filename.equals(img.filename)){
-//					arr[in++]=imageSet.get(rnd);
-//				}
-//				else{
-//					rndSet.remove(rnd);
-//				}
-//			}
-//		}
-//		return arr;
-		
+		//		Image[] arr = new Image[size];
+		//		int in=0;
+		//		Random r = new Random();
+		//		Set<Integer> rndSet = new HashSet<Integer>();
+		//		while(in<arr.length){
+		//			int rnd = r.nextInt(imageSet.size());
+		//			rndSet.add(rnd);
+		//			if(rndSet.size()==in+1){
+		//				if(!imageSet.get(rnd).filename.equals(img.filename)){
+		//					arr[in++]=imageSet.get(rnd);
+		//				}
+		//				else{
+		//					rndSet.remove(rnd);
+		//				}
+		//			}
+		//		}
+		//		return arr;
+
 		int[] indexes = featureSimilarities.getMaxValuedEdgeIndexes(imageSet.indexOf(img), size);
 		Image[] ret = new Image[size];
 		for (int i = 0; i < size; i++) {
@@ -410,20 +411,20 @@ public class GraphManager {
 		}
 		return ret;
 	}
-	
+
 	public void setChoice(Image imgA, Image imgB, int choice){
 		int i = imageSet.indexOf(imgA);
 		int j = imageSet.indexOf(imgB);
 		choices.set(i, j, choice);
 		writeChoices();
 	}
-	
+
 	public int getChoice(Image imgA, Image imgB){
 		int i = imageSet.indexOf(imgA);
 		int j = imageSet.indexOf(imgB);
 		return (int) choices.get(i, j);
 	}
-	
+
 	private void writeChoices(){
 		try {
 			ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream(new File(CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("."),"choices.dat")));
@@ -444,7 +445,7 @@ public class GraphManager {
 			return;
 		}
 	}
-	
+
 	private void readChoices(){
 		try {
 			File dat = CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("choices.dat");
@@ -465,7 +466,7 @@ public class GraphManager {
 			return;
 		}
 	}
-	
-	
-	
+
+
+
 }

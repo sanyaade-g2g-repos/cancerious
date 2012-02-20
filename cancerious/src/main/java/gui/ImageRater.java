@@ -11,8 +11,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import entity.Image;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 public class ImageRater extends JPanel {
 
@@ -21,7 +19,7 @@ public class ImageRater extends JPanel {
 	public ImageRater(final Image image, int similarity) {
 		super();
 		setLayout(new BorderLayout(0, 0));
-		
+
 		JLabel label = new JLabel("");
 		if(image.fileHandler==null){
 			image.openHandler();
@@ -32,7 +30,7 @@ public class ImageRater extends JPanel {
 			e.printStackTrace();
 		}
 		add(label);
-		
+
 		final JSlider slider = new JSlider();
 		slider.setSnapToTicks(true);
 		slider.setPaintLabels(true);
@@ -41,13 +39,14 @@ public class ImageRater extends JPanel {
 		slider.setMaximum(4);
 		slider.setValue(similarity);
 		slider.addChangeListener(new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				//TODO change similarity value here
 				((MatchImagesPanel)ImageRater.this.getParent()).setChoice(image, slider.getValue());
 			}
 		});
 		add(slider, BorderLayout.SOUTH);
-		
+
 	}
 
 }
