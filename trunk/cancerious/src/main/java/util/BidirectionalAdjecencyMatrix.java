@@ -9,20 +9,20 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 	private static final long serialVersionUID = 3608589617663227922L;
 
 	private double[][] matrix;
-	
+
 	private int n;
-	
-	public BidirectionalAdjecencyMatrix (int n){
+
+	public BidirectionalAdjecencyMatrix (int n, double initialValue){
 		this.n = n;
 		matrix = new double[n][];
 		for (int i=0; i<n; i++){
 			matrix[i]=new double[i];
 			for (int j=0; j<i; j++){
-				matrix[i][j] = 0.0;
+				matrix[i][j] = initialValue;
 			}
 		}
 	}
-	
+
 	public double get (int row, int col){
 		if(row==col){
 			throw new RuntimeException("row==col is not permitted");
@@ -37,7 +37,7 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 			return matrix[col][row];
 		}
 	}
-	
+
 	public void set (int row, int col, double val){
 		if(row==col){
 			throw new RuntimeException("row==col is not permitted");
@@ -52,7 +52,7 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 			matrix[col][row] = val;			
 		}
 	}
-	
+
 	public double[] getAdjecencies(int index){
 		if(index<0 || index>=n){
 			return null;
@@ -68,27 +68,29 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 		}
 		return ret;
 	}
-	
+
 	public int getLeastEdgedVertice(){
 		PriorityQueue<Integer> pq = new PriorityQueue<Integer>();
 		for (int i = 0; i < n; i++) {
 			double[] adj = getAdjecencies(i);
 			int zero = 0;
 			for (int j = 0; j < n; j++) {
-				if(adj[j]==0.0)
+				if(adj[j]==0.0) {
 					zero++;
+				}
 			}
 			pq.add(0-zero);
 		}
 		return pq.poll();
 	}
-	
+
 	public int[] getMaxValuedEdgeIndexes(int index, int count){
 		double[] adj = getAdjecencies(index);
 		PriorityQueue<EdgeValueVertexIndex> pq = new PriorityQueue<EdgeValueVertexIndex>();
 		for (int i = 0; i < adj.length; i++) {
-			if(i!=index)
+			if(i!=index) {
 				pq.add(new EdgeValueVertexIndex(i, adj[i]));
+			}
 		}
 		int[] ret = new int[count];
 		for (int i = 0; i < count; i++) {
@@ -96,12 +98,12 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 		}
 		return ret;
 	}
-	
+
 	private class EdgeValueVertexIndex implements Comparable<EdgeValueVertexIndex>{
 
 		int index;
 		double value;
-		
+
 		public EdgeValueVertexIndex(int index, double value) {
 			super();
 			this.index = index;
@@ -114,9 +116,9 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 			double anotherVal = o.value;
 			return (thisVal<anotherVal ? -1 : (thisVal==anotherVal ? 0 : 1));
 		}
-		
+
 	}
-	
+
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
@@ -129,11 +131,12 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 		for (int i = 0; i < n; i++) {
 			sb.append(i+"\t");
 			for (int j = 0; j < n; j++) {
-				if(i<=j) continue;
-				else{
+				if(i<=j) {
+					continue;
+				} else{
 					sb.append(df.format(matrix[i][j])+"\t");
 				}
-					
+
 			}
 			sb.append('\n');
 		}
