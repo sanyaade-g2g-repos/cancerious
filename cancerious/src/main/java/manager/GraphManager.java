@@ -257,7 +257,7 @@ public class GraphManager {
 			CanceriousLogger.info("Normalization complete");
 
 			//TODO FEATURELARIN BİRBİRİ ARASINDAKİ BENZERLİK HESAPLAMASI BURADA
-			featureSimilarities = new BidirectionalAdjecencyMatrix(imageSet.size());
+			featureSimilarities = new BidirectionalAdjecencyMatrix(imageSet.size(), -1);
 			for (int i = 0; i < imageSet.size(); i++) {
 				Image imageI = imageSet.get(i);
 				for (int j = i; j < imageSet.size(); j++) {
@@ -450,7 +450,7 @@ public class GraphManager {
 		try {
 			File dat = CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("choices.dat");
 			if(dat==null){
-				choices = new BidirectionalAdjecencyMatrix(imageSet.size());
+				choices = new BidirectionalAdjecencyMatrix(imageSet.size(), -1);
 				return;
 			}
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dat));

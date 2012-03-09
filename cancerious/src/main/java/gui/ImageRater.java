@@ -35,8 +35,8 @@ public class ImageRater extends JPanel {
 		slider.setSnapToTicks(true);
 		slider.setPaintLabels(true);
 		slider.setMajorTickSpacing(1);
-		slider.setMinimum(0);
-		slider.setMaximum(4);
+		slider.setMinimum(-1);
+		slider.setMaximum(2);
 		slider.setValue(similarity);
 		slider.addChangeListener(new ChangeListener() {
 			@Override
