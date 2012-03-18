@@ -2,15 +2,16 @@ package manager;
 
 import gui.MatchImagesPanel;
 import gui.SettingsPanel;
+import gui.ViewImagesPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class GUIManager extends JFrame {
 
@@ -34,7 +35,7 @@ public class GUIManager extends JFrame {
 		JPanel matchImages = new MatchImagesPanel();
 		tabbedPane.addTab("Match Images", null, matchImages, null);
 
-		JPanel viewImages = new JPanel();
+		JPanel viewImages = new ViewImagesPanel();
 		tabbedPane.addTab("View Images", null, viewImages, null);
 
 		JPanel settings = new SettingsPanel();
