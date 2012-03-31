@@ -7,11 +7,15 @@ import java.net.MalformedURLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import main.CanceriousMain;
 import entity.Image;
 
+/**
+ * view all images kısmında, bir imaj karesine tekabul eden panel
+ * @author SEB
+ */
 public class ShowImage extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -42,7 +46,8 @@ public class ShowImage extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Write method
-				JOptionPane.showMessageDialog(ShowImage.this, "you have clicked on img "+image.filename);
+				CanceriousMain.getGuiManager().getViewImages().hideAll();
+				CanceriousMain.getGuiManager().getViewImages().add(new ImageRelations(image));
 			}
 		});
 		if(image.fileHandler==null){

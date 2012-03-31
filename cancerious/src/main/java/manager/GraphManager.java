@@ -467,6 +467,21 @@ public class GraphManager {
 		}
 	}
 
+	public BidirectionalAdjecencyMatrix getFeatureSimilarities() {
+		return featureSimilarities;
+	}
+
+	public void setFeatureSimilarities(BidirectionalAdjecencyMatrix featureSimilarities) {
+		this.featureSimilarities = featureSimilarities;
+	}
+
+	public BidirectionalAdjecencyMatrix getChoices() {
+		return choices;
+	}
+
+	public void setChoices(BidirectionalAdjecencyMatrix choices) {
+		this.choices = choices;
+	}
 
 
 }
