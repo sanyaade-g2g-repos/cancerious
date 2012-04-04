@@ -39,7 +39,7 @@ public class ImageToMatch extends JPanel {
 	}
 
 	public void nextImage(){
-		((MatchImagesPanel)this.getParent()).nextImage();
+		((MatchImagesPanel)this.getParent()).nextImage(5, true);
 	}
 
 	private static final long serialVersionUID = -2492212483685159320L;
