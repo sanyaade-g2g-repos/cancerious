@@ -39,6 +39,9 @@ public class ViewImagesPanel extends JPanel {
 		}
 
 		this.add(jScrollPane, BorderLayout.CENTER);
+		
+		revalidate();
+		repaint();
 	}
 
 	public void hideAll(){

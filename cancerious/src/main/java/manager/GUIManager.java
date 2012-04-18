@@ -2,6 +2,7 @@ package manager;
 
 import gui.MatchImagesPanel;
 import gui.SettingsPanel;
+import gui.ViewAllMatchings;
 import gui.ViewImagesPanel;
 
 import java.awt.BorderLayout;
@@ -18,6 +19,7 @@ public class GUIManager extends JFrame {
 	private MatchImagesPanel matchImages;
 	private ViewImagesPanel viewImages;
 	private SettingsPanel settings;
+	private ViewAllMatchings viewAllMatchings;
 
 	public GUIManager() {
 		addWindowListener(new WindowAdapter() {
@@ -38,6 +40,9 @@ public class GUIManager extends JFrame {
 
 		viewImages = new ViewImagesPanel();
 		tabbedPane.addTab("View Images", null, viewImages, null);
+		
+		viewAllMatchings = new ViewAllMatchings();
+		tabbedPane.addTab("View All Matchings", null, viewAllMatchings, null);
 
 		settings = new SettingsPanel();
 		tabbedPane.addTab("Settings", null, settings, null);
@@ -49,6 +54,10 @@ public class GUIManager extends JFrame {
 
 	public ViewImagesPanel getViewImages() {
 		return viewImages;
+	}
+
+	public ViewAllMatchings getViewAllMatchings() {
+		return viewAllMatchings;
 	}
 
 	public SettingsPanel getSettings() {

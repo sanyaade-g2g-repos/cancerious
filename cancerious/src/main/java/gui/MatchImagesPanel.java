@@ -137,7 +137,8 @@ public class MatchImagesPanel extends JPanel {
 		JButton btnNext = new JButton("Next 5");
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				nextImage(currentN + 5, false);
+				if(currentN+5<=CanceriousMain.getGraphManager().imageSet.size())
+					nextImage(currentN + 5, false);
 			}
 		});
 		GridBagConstraints gbc_btnNext = new GridBagConstraints();
