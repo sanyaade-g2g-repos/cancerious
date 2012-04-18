@@ -95,6 +95,8 @@ public class ImageRelations extends JPanel {
 		springLayout.putConstraint(SpringLayout.NORTH, lblFilename, 0, SpringLayout.NORTH, btnBack);
 		springLayout.putConstraint(SpringLayout.WEST, lblFilename, 6, SpringLayout.EAST, btnBack);
 		add(lblFilename);
+		
+		similaryStateChanged();
 
 	}
 
@@ -120,7 +122,7 @@ public class ImageRelations extends JPanel {
 				//CanceriousLogger.info("rater added. " +image.filename+","+otherImage.filename);
 			}
 		}
-
+		relationPanel.revalidate();
 		relationPanel.repaint();
 	}
 }

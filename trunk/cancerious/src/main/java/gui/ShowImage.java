@@ -48,6 +48,8 @@ public class ShowImage extends JPanel {
 				// TODO Write method
 				CanceriousMain.getGuiManager().getViewImages().hideAll();
 				CanceriousMain.getGuiManager().getViewImages().add(new ImageRelations(image));
+				CanceriousMain.getGuiManager().getViewImages().revalidate();
+				CanceriousMain.getGuiManager().getViewImages().repaint();
 			}
 		});
 		if(image.fileHandler==null){
