@@ -29,6 +29,14 @@ import entity.Image;
 
 public class GraphManager {
 
+	public static final String SIMILARITIES_TXT = "similarities.txt";
+	public static final String SIMILARITIES_DAT = "similarities.dat";
+	public static final String CHOICES_TXT = "choices.txt";
+	public static final String CHOICES_DAT = "choices.dat";
+	public static final String IMAGE_STORE_TXT = "image_store.txt";
+	public static final String FEATURE_STORE_TXT = "feature_store.txt";
+	public static final String FEATURE_CACHE_TXT = "feature_cache.txt";
+
 	public List<Image> imageSet;
 	public List<Feature> featureList;
 
@@ -44,7 +52,7 @@ public class GraphManager {
 			@Override
 			public void run() {
 				CanceriousLogger.info("Shutting down...");
-				//TODO save user choices to file then exit. 
+				//TODO save user choices to file then exit.
 			}
 		});
 
@@ -58,17 +66,17 @@ public class GraphManager {
 		readChoices();
 	}
 
-	private void loadFeatures() {
+	public void loadFeatures() {
 		ConfigurationManager conf = CanceriousMain.getConfigurationManager();
 
 		//init feature_store.txt
-		File storeTxt = conf.getFeatureAsFile("feature_store.txt");
+		File storeTxt = conf.getFeatureAsFile(FEATURE_STORE_TXT);
 		if(!storeTxt.exists()){
 			CanceriousLogger.warn("feature_store.txt file inside feature store dir does not exist.");
 			return;
 		}
 		//init feature_cache
-		File featureCache = conf.getDatabaseFileAsFile("feature_cache.txt");
+		File featureCache = conf.getDatabaseFileAsFile(FEATURE_CACHE_TXT);
 		String storeLine;
 		BufferedReader storeReader = null;
 		try{
@@ -90,7 +98,7 @@ public class GraphManager {
 			while(true){
 				try{
 					cacheLine = cacheReader.readLine();
-					storeLine = storeReader.readLine();					
+					storeLine = storeReader.readLine();
 				} catch (IOException e) {
 					CanceriousLogger.error(e);
 					continue;
@@ -136,11 +144,11 @@ public class GraphManager {
 				CanceriousLogger.error(e);
 			}
 		}
-		else{ //feature cache does not exist yet. 
+		else{ //feature cache does not exist yet.
 			reCalculateAllFeatures = true;
 		}
 
-		//read ALL features from ALL filenames in feature store and put the values to image objects in the set. 
+		//read ALL features from ALL filenames in feature store and put the values to image objects in the set.
 		if(reCalculateAllFeatures){
 
 			while(true){ //for each file
@@ -183,10 +191,10 @@ public class GraphManager {
 					if(featureLine==null){
 						break;
 					}
-					//burada feature dosya yapısının kesinleştirilmesi gerekiyor. 
-					// 1.satır: , priorities, , , 
+					//burada feature dosya yapısının kesinleştirilmesi gerekiyor.
+					// 1.satır: , priorities, , ,
 					// 2.satır: , feature names, , ,
-					// 3.satır dosyaadı, değerler, , , 
+					// 3.satır dosyaadı, değerler, , ,
 					featureLineToken = new StringTokenizer(featureLine,",");
 					if(firstLine){ //1.satırdayız
 						priorities = new LinkedList<Integer>();
@@ -208,9 +216,9 @@ public class GraphManager {
 						secondLine = false;
 					}
 					else{//feature değerlerini okuyoruz. bu kısım bir feature dosyasındaki her bir değer satırı için çalışır
-						//ilk hücrede image adı yazması lazım. 
+						//ilk hücrede image adı yazması lazım.
 						String imageName = featureLineToken.nextToken();
-						// bu değer her hücreden sonra arttırılır ve bir sonraki feature değeri, bu feature kullanılarak yazılır. 
+						// bu değer her hücreden sonra arttırılır ve bir sonraki feature değeri, bu feature kullanılarak yazılır.
 						int featureIndex = 0;
 						// image adı image listesinde aranır
 						boolean imageFound = false;
@@ -232,7 +240,7 @@ public class GraphManager {
 						if(!imageFound){
 							CanceriousLogger.warn("image "+imageName+" is not found in image store!");
 						}
-					}//bir satırın değerleri okunup yazıldı. 
+					}//bir satırın değerleri okunup yazıldı.
 				}//bir feature dosyası tamamen okundu.
 			}//tüm feature dosyaları okundu
 			CanceriousLogger.info("Feature reading complete");
@@ -256,7 +264,7 @@ public class GraphManager {
 			}
 			CanceriousLogger.info("Normalization complete");
 
-			//TODO FEATURELARIN BİRBİRİ ARASINDAKİ BENZERLİK HESAPLAMASI BURADA
+			//FEATURELARIN BİRBİRİ ARASINDAKİ BENZERLİK HESAPLAMASI BURADA
 			featureSimilarities = new BidirectionalAdjecencyMatrix(imageSet.size(), -1);
 			for (int i = 0; i < imageSet.size(); i++) {
 				Image imageI = imageSet.get(i);
@@ -287,10 +295,10 @@ public class GraphManager {
 			CanceriousLogger.info("Similarity calculation complete");
 
 
-			//BENZERLİKLER (ADJ.MATRIX) BİR DOSYAYA YAZILIYOR.  
+			//BENZERLİKLER (ADJ.MATRIX) BİR DOSYAYA YAZILIYOR.
 			try {
 				CanceriousLogger.info(conf.getDatabaseFileAsFile(".").getPath());
-				ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream(new File(conf.getDatabaseFileAsFile("."),"similarities.dat")));
+				ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream(new File(conf.getDatabaseFileAsFile("."),SIMILARITIES_DAT)));
 				fos.writeObject(featureSimilarities);
 				fos.close();
 			} catch (FileNotFoundException e) {
@@ -308,7 +316,7 @@ public class GraphManager {
 		}//imajların benzerlik hesaplaması tamamlandı, dosyaya yazıldı ve cache update edildi
 		else{ //benzerlik hesaplaması zaten mevcut ve güncel. dosyadan oku.
 			try {
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(conf.getDatabaseFileAsFile("similarities.dat")));
+				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(conf.getDatabaseFileAsFile(SIMILARITIES_DAT)));
 				featureSimilarities = (BidirectionalAdjecencyMatrix) ois.readObject();
 			} catch (FileNotFoundException e) {
 				CanceriousLogger.error(e);
@@ -342,7 +350,7 @@ public class GraphManager {
 		imageSet = new ArrayList<Image>();
 
 		//init image_store.txt
-		File storeTxt = conf.getImageAsFile("image_store.txt");
+		File storeTxt = conf.getImageAsFile(IMAGE_STORE_TXT);
 		if(!storeTxt.exists()){
 			CanceriousLogger.warn("image_store.txt file inside image store dir does not exist.");
 			return;
@@ -427,13 +435,13 @@ public class GraphManager {
 
 	private void writeChoices(){
 		try {
-			ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream(new File(CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("."),"choices.dat")));
+			ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream(new File(CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("."),CHOICES_DAT)));
 			fos.writeObject(choices);
 			fos.close();
-			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("."),"choices.txt")));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("."),CHOICES_TXT)));
 			bw.write(choices.toString());
 			bw.close();
-			bw = new BufferedWriter(new FileWriter(new File(CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("."),"similarities.txt")));
+			bw = new BufferedWriter(new FileWriter(new File(CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("."),SIMILARITIES_TXT)));
 			bw.write(featureSimilarities.toString());
 			bw.close();
 			//CanceriousLogger.info("Choices Written");
@@ -448,7 +456,7 @@ public class GraphManager {
 
 	private void readChoices(){
 		try {
-			File dat = CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("choices.dat");
+			File dat = CanceriousMain.getConfigurationManager().getDatabaseFileAsFile(CHOICES_DAT);
 			if(dat==null){
 				choices = new BidirectionalAdjecencyMatrix(imageSet.size(), -1);
 				return;
@@ -464,18 +472,6 @@ public class GraphManager {
 		} catch (ClassNotFoundException e) {
 			CanceriousLogger.error(e);
 			return;
-		}
-	}
-	
-	public boolean exportChoicesToFile(File out){
-		try{
-			BufferedWriter bw = new BufferedWriter(new FileWriter(out));
-			
-			
-			return true;
-		}catch (Exception e) {
-			e.printStackTrace();
-			return false;
 		}
 	}
 
