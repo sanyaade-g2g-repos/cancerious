@@ -466,6 +466,18 @@ public class GraphManager {
 			return;
 		}
 	}
+	
+	public boolean exportChoicesToFile(File out){
+		try{
+			BufferedWriter bw = new BufferedWriter(new FileWriter(out));
+			
+			
+			return true;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public BidirectionalAdjecencyMatrix getFeatureSimilarities() {
 		return featureSimilarities;
