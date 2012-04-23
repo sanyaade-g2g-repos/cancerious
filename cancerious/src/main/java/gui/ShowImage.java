@@ -60,10 +60,11 @@ public class ShowImage extends JPanel {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+		icon.setToolTipText(image.filename);
 		add(icon);
 
-		JLabel filename = new JLabel(image.filename);
-		add(filename, BorderLayout.SOUTH);
+		//JLabel filename = new JLabel(image.filename);
+		//add(filename, BorderLayout.SOUTH);
 
 	}
 

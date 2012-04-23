@@ -27,7 +27,7 @@ public class ViewImagesPanel extends JPanel {
 		hideAll();
 
 		this.setLayout(new BorderLayout());
-		JPanel container = new JPanel(new GridLayout(0, 3, 0, 0));
+		JPanel container = new JPanel(new GridLayout(0, 3, 3, 3));
 		int imgCount = CanceriousMain.getGraphManager().imageSet.size();
 		container.setBounds(0,0, 700, imgCount*50);
 

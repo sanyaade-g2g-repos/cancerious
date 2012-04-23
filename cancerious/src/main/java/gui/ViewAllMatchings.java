@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -134,6 +136,7 @@ public class ViewAllMatchings extends JPanel {
 		
 		this.add(jScrollPane, BorderLayout.CENTER);
 		
+		JPanel buttonPanel = new JPanel(new FlowLayout());		
 		JButton refreshBtn = new JButton("Refresh");
 		refreshBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -144,7 +147,20 @@ public class ViewAllMatchings extends JPanel {
 				}
 			}
 		});
-		this.add(refreshBtn, BorderLayout.NORTH);
+		buttonPanel.add(refreshBtn);
+		
+		JButton exportBtn = new JButton("Export To File");
+		exportBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fc = new JFileChooser();
+				fc.showSaveDialog(ViewAllMatchings.this);
+				if(fc.getSelectedFile()!=null){
+					
+				}
+			}
+		});
+		buttonPanel.add(exportBtn);
+		this.add(buttonPanel, BorderLayout.NORTH);
 		
 		revalidate();
 		repaint();
