@@ -2,7 +2,11 @@ package gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -10,10 +14,6 @@ import javax.swing.event.ChangeListener;
 
 import main.CanceriousMain;
 import entity.Image;
-import javax.swing.JButton;
-import java.awt.Insets;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /**
  * 6 imajdan olusur (ilerde degistirilebilir), 
@@ -23,7 +23,7 @@ import java.awt.event.ActionEvent;
 public class MatchImagesPanel extends JPanel {
 
 	private Image headImage;
-	
+
 	private int currentN;
 
 	public MatchImagesPanel() {
@@ -34,19 +34,19 @@ public class MatchImagesPanel extends JPanel {
 		gbl_matchImages.rowWeights = new double[] { 1.0, 1.0, 0.0};
 		this.setLayout(gbl_matchImages);
 
-		nextImage(5, true);
+		nextImage(0, true);
 	}
 
 	public void nextImage(final int n, final boolean change){
 		this.currentN = n;
-		
+
 		this.removeAll();
 
 		GridBagConstraints gbc;
 		if (change) {
 			headImage = CanceriousMain.getGraphManager().getNextImageForMatching();
 		}
-		final Image[] similarImages = CanceriousMain.getGraphManager().getImagesToMatch(headImage,n);
+		final Image[] similarImages = CanceriousMain.getGraphManager().getImagesToMatch(headImage,n,5);
 
 		ImageToMatch imageToMatch = new ImageToMatch(headImage);
 		gbc = new GridBagConstraints();
@@ -56,11 +56,11 @@ public class MatchImagesPanel extends JPanel {
 		this.add(imageToMatch, gbc);
 
 		ImageRater rater;
-		rater = new ImageRater(similarImages[n-5], CanceriousMain.getGraphManager().getChoice(headImage, similarImages[n-5]));
+		rater = new ImageRater(similarImages[0], CanceriousMain.getGraphManager().getChoice(headImage, similarImages[0]));
 		rater.getSlider().addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				setChoice(similarImages[n-5], ((JSlider)arg0.getSource()).getValue());
+				setChoice(similarImages[0], ((JSlider)arg0.getSource()).getValue());
 			}
 		});
 		gbc_1 = new GridBagConstraints();
@@ -69,11 +69,11 @@ public class MatchImagesPanel extends JPanel {
 		gbc_1.gridy = 0;
 		this.add(rater, gbc_1);
 
-		rater = new ImageRater(similarImages[n-4], CanceriousMain.getGraphManager().getChoice(headImage, similarImages[n-4]));
+		rater = new ImageRater(similarImages[1], CanceriousMain.getGraphManager().getChoice(headImage, similarImages[1]));
 		rater.getSlider().addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				setChoice(similarImages[n-4], ((JSlider)arg0.getSource()).getValue());
+				setChoice(similarImages[1], ((JSlider)arg0.getSource()).getValue());
 			}
 		});
 		gbc_2 = new GridBagConstraints();
@@ -82,11 +82,11 @@ public class MatchImagesPanel extends JPanel {
 		gbc_2.gridy = 0;
 		this.add(rater, gbc_2);
 
-		rater = new ImageRater(similarImages[n-3], CanceriousMain.getGraphManager().getChoice(headImage, similarImages[n-3]));
+		rater = new ImageRater(similarImages[2], CanceriousMain.getGraphManager().getChoice(headImage, similarImages[2]));
 		rater.getSlider().addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				setChoice(similarImages[n-3], ((JSlider)arg0.getSource()).getValue());
+				setChoice(similarImages[2], ((JSlider)arg0.getSource()).getValue());
 			}
 		});
 		gbc_3 = new GridBagConstraints();
@@ -95,11 +95,11 @@ public class MatchImagesPanel extends JPanel {
 		gbc_3.gridy = 1;
 		this.add(rater, gbc_3);
 
-		rater = new ImageRater(similarImages[n-2], CanceriousMain.getGraphManager().getChoice(headImage, similarImages[n-2]));
+		rater = new ImageRater(similarImages[3], CanceriousMain.getGraphManager().getChoice(headImage, similarImages[3]));
 		rater.getSlider().addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				setChoice(similarImages[n-2], ((JSlider)arg0.getSource()).getValue());
+				setChoice(similarImages[3], ((JSlider)arg0.getSource()).getValue());
 			}
 		});
 		gbc_4 = new GridBagConstraints();
@@ -108,11 +108,11 @@ public class MatchImagesPanel extends JPanel {
 		gbc_4.gridy = 1;
 		this.add(rater, gbc_4);
 
-		rater = new ImageRater(similarImages[n-1], CanceriousMain.getGraphManager().getChoice(headImage, similarImages[n-1]));
+		rater = new ImageRater(similarImages[4], CanceriousMain.getGraphManager().getChoice(headImage, similarImages[4]));
 		rater.getSlider().addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				setChoice(similarImages[n-1], ((JSlider)arg0.getSource()).getValue());
+				setChoice(similarImages[4], ((JSlider)arg0.getSource()).getValue());
 			}
 		});
 		gbc_5 = new GridBagConstraints();
@@ -120,10 +120,11 @@ public class MatchImagesPanel extends JPanel {
 		gbc_5.gridx = 2;
 		gbc_5.gridy = 1;
 		this.add(rater, gbc_5);
-		
+
 		JButton btnPrev = new JButton("Prev 5");
-		btnPrev.setVisible(n>5);
+		btnPrev.setVisible(n>0);
 		btnPrev.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				nextImage(currentN - 5, false);
 			}
@@ -133,12 +134,14 @@ public class MatchImagesPanel extends JPanel {
 		gbc_btnPrev.gridx = 1;
 		gbc_btnPrev.gridy = 2;
 		add(btnPrev, gbc_btnPrev);
-		
+
 		JButton btnNext = new JButton("Next 5");
 		btnNext.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(currentN+5<=CanceriousMain.getGraphManager().imageSet.size())
+				if(currentN+10<=CanceriousMain.getGraphManager().imageList.size()) {
 					nextImage(currentN + 5, false);
+				}
 			}
 		});
 		GridBagConstraints gbc_btnNext = new GridBagConstraints();

@@ -84,7 +84,13 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 		return pq.poll();
 	}
 
-	public int[] getMaxValuedEdgeIndexes(int index, int count){
+	/**
+	 * En yakın (en düşük ağırlıklı) komşuları getirir. 
+	 * @param index
+	 * @param count kaç tane komşu getirileceği
+	 * @return
+	 */
+	public int[] getMinValuedEdgeIndexes(int index, int skip, int count){
 		double[] adj = getAdjecencies(index);
 		PriorityQueue<EdgeValueVertexIndex> pq = new PriorityQueue<EdgeValueVertexIndex>();
 		for (int i = 0; i < adj.length; i++) {
@@ -93,6 +99,33 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 			}
 		}
 		int[] ret = new int[count];
+		for (int i = 0; i < skip; i++) {
+			pq.poll();
+		}
+		for (int i = 0; i < count; i++) {
+			ret[i] = pq.poll().index;
+		}
+		return ret;
+	}
+
+	/**
+	 * En yüksek ağırlıklı komşuları getirir. 
+	 * @param index
+	 * @param count kaç tane komşu getirileceği
+	 * @return
+	 */
+	public int[] getMaxValuedEdgeIndexes(int index, int skip, int count){
+		double[] adj = getAdjecencies(index);
+		PriorityQueue<EdgeValueVertexIndexReversed> pq = new PriorityQueue<EdgeValueVertexIndexReversed>();
+		for (int i = 0; i < adj.length; i++) {
+			if(i!=index) {
+				pq.add(new EdgeValueVertexIndexReversed(i, adj[i]));
+			}
+		}
+		int[] ret = new int[count];
+		for (int i = 0; i < skip; i++) {
+			pq.poll();
+		}
 		for (int i = 0; i < count; i++) {
 			ret[i] = pq.poll().index;
 		}
@@ -119,6 +152,26 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 
 	}
 
+	private class EdgeValueVertexIndexReversed implements Comparable<EdgeValueVertexIndexReversed>{
+
+		int index;
+		double value;
+
+		public EdgeValueVertexIndexReversed(int index, double value) {
+			super();
+			this.index = index;
+			this.value = value;
+		}
+
+		@Override
+		public int compareTo(EdgeValueVertexIndexReversed o) {
+			double thisVal = this.value;
+			double anotherVal = o.value;
+			return (thisVal<anotherVal ? 1 : (thisVal==anotherVal ? 0 : -1));
+		}
+
+	}
+
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
@@ -127,7 +180,7 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 		for (int i = 0; i < n; i++) {
 			sb.append(i+"\t");
 		}
-		sb.append('\n');
+		sb.append(String.format("%n"));
 		for (int i = 0; i < n; i++) {
 			sb.append(i+"\t");
 			for (int j = 0; j < n; j++) {
@@ -138,9 +191,9 @@ public class BidirectionalAdjecencyMatrix implements Serializable{
 				}
 
 			}
-			sb.append('\n');
+			sb.append(String.format("%n"));
 		}
-		sb.append('\n');
+		sb.append(String.format("%n"));
 		return sb.toString();
 	}
 }

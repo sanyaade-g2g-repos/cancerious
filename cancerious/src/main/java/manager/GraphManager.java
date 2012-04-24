@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class GraphManager {
 	public static final String FEATURE_STORE_TXT = "feature_store.txt";
 	public static final String FEATURE_CACHE_TXT = "feature_cache.txt";
 
-	public List<Image> imageSet;
+	public List<Image> imageList;
 	public List<Feature> featureList;
 
 	private BidirectionalAdjecencyMatrix featureSimilarities;
@@ -64,6 +65,8 @@ public class GraphManager {
 
 		//load choices
 		readChoices();
+
+		writeChoices();
 	}
 
 	public void loadFeatures() {
@@ -151,6 +154,14 @@ public class GraphManager {
 		//read ALL features from ALL filenames in feature store and put the values to image objects in the set.
 		if(reCalculateAllFeatures){
 
+			featureList = new ArrayList<Feature>();
+			try{
+				storeReader = new BufferedReader(new FileReader(storeTxt));
+			}
+			catch (Exception e) {
+				CanceriousLogger.error(e);
+			}
+
 			while(true){ //for each file
 				try {
 					storeLine = storeReader.readLine();
@@ -179,7 +190,6 @@ public class GraphManager {
 				boolean secondLine = false;
 				Queue<Integer> priorities = null ;
 				List<Feature> featureListForFile = new ArrayList<Feature>();
-				featureList = new ArrayList<Feature>();
 
 				while(true){ //for each line in a file
 					try {
@@ -222,7 +232,7 @@ public class GraphManager {
 						int featureIndex = 0;
 						// image adı image listesinde aranır
 						boolean imageFound = false;
-						for (Image image : imageSet) {
+						for (Image image : imageList) {
 							if(image.filename.equals(imageName)){
 								while(featureLineToken.hasMoreTokens()){
 									Feature feature = featureListForFile.get(featureIndex);
@@ -265,15 +275,15 @@ public class GraphManager {
 			CanceriousLogger.info("Normalization complete");
 
 			//FEATURELARIN BİRBİRİ ARASINDAKİ BENZERLİK HESAPLAMASI BURADA
-			featureSimilarities = new BidirectionalAdjecencyMatrix(imageSet.size(), -1);
-			for (int i = 0; i < imageSet.size(); i++) {
-				Image imageI = imageSet.get(i);
-				for (int j = i; j < imageSet.size(); j++) {
+			featureSimilarities = new BidirectionalAdjecencyMatrix(imageList.size(), -1);
+			for (int i = 0; i < imageList.size(); i++) {
+				Image imageI = imageList.get(i);
+				for (int j = i; j < imageList.size(); j++) {
 					if (i == j) {
 						continue;
 					}
 					// feature değerlerini karşılaştırıp priorityi de işin içine katarak değerleri hesapla.
-					Image imageJ = imageSet.get(j);
+					Image imageJ = imageList.get(j);
 					double total=0.0;
 					Set<FeatureValue> jValues = new HashSet<FeatureValue>();
 					for (FeatureValue fv : imageJ.featureValues) {
@@ -331,12 +341,12 @@ public class GraphManager {
 			CanceriousLogger.info("Similarities are written to file");
 		}
 
-		for (Image img : imageSet) {
-			img.featureValues = null;
+		for (Image img : imageList) {
+			img.featureValues = new HashSet<FeatureValue>();
 		}
 
 		for (Feature f : featureList) {
-			f.values = null;
+			f.values = new ArrayList<FeatureValue>();
 		}
 
 		CanceriousLogger.info("Features are locked and loaded");
@@ -347,7 +357,7 @@ public class GraphManager {
 		ConfigurationManager conf = CanceriousMain.getConfigurationManager();
 
 		//init image set
-		imageSet = new ArrayList<Image>();
+		imageList = new ArrayList<Image>();
 
 		//init image_store.txt
 		File storeTxt = conf.getImageAsFile(IMAGE_STORE_TXT);
@@ -365,6 +375,7 @@ public class GraphManager {
 			return;
 		}
 		String line;
+		int index=0;
 		while(true){
 			try {
 				line = reader.readLine();
@@ -381,16 +392,83 @@ public class GraphManager {
 				continue;
 			}
 			Image img = new Image(line);
-			imageSet.add(img);
+			img.id = index++;
+			imageList.add(img);
 		}
 	}
 
 	public Image getNextImageForMatching(){
 		Random r = new Random();
-		return imageSet.get(r.nextInt(imageSet.size()));
+		return imageList.get(r.nextInt(imageList.size()));
 
 		//		int index = choices.getLeastEdgedVertice();
 		//		return imageSet.get(index);
+	}
+
+	private int[] matchingCache = null;
+	private Image matchingImage = null;
+	static final int FROM_FEATURE = 2;
+	static final int FROM_BFS = 1;
+	static final int FROM_RANDOM = 2;
+
+
+	public Image[] getImagesToMatch(Image img, int skip, int count){
+		boolean recalculate = false;
+		if(img.equals(matchingImage)){
+			for (int i = skip; i < skip + count; i++) {
+				if (matchingCache[i]==-1) {
+					recalculate = true;
+					break;
+				}
+			}
+		}
+		else{
+			matchingImage = img;
+			matchingCache = new int[imageList.size()];
+			for (int i = 0; i < matchingCache.length; i++) {
+				matchingCache[i] = -1;
+			}
+			recalculate = true;
+		}
+		if(recalculate){
+			int page = skip/count;
+			ArrayList<Integer> indexes = new ArrayList<Integer>(count);
+			//feature
+			int[] minValuedEdgeIndexesFromFeature = featureSimilarities.getMinValuedEdgeIndexes(img.id, page*FROM_FEATURE, FROM_FEATURE);
+			for (int i = 0; i < minValuedEdgeIndexesFromFeature.length; i++) {
+				indexes.add(minValuedEdgeIndexesFromFeature[i]);
+				CanceriousLogger.info("from feature: "+minValuedEdgeIndexesFromFeature[i]);
+			}
+			//bfs
+			int[] maxValuedEdgeIndexesFromBfs = choices.getMaxValuedEdgeIndexes(img.id, page*FROM_BFS, FROM_BFS);
+			for (int i = 0; i < maxValuedEdgeIndexesFromBfs.length; i++) {
+				if (!indexes.contains(maxValuedEdgeIndexesFromBfs[i]) && maxValuedEdgeIndexesFromBfs[i]!=img.id) {
+					indexes.add(maxValuedEdgeIndexesFromBfs[i]);
+					CanceriousLogger.info("from bfs: "+maxValuedEdgeIndexesFromBfs[i]);
+				}
+			}
+			//random
+			Random r = new Random();
+			while (true) {/*for (int i = 0; i < FROM_RANDOM; i++) {*/
+				Integer random = r.nextInt(imageList.size());
+				if (!indexes.contains(random) && random!=img.id) {
+					indexes.add(random);
+					CanceriousLogger.info("from random: "+random);
+				}
+				if (indexes.size()>=count) {
+					break;
+				}
+			}
+			Collections.shuffle(indexes);
+			for (int i = skip; i < skip + count; i++) {
+				matchingCache[i] = indexes.remove(0);
+			}
+		}
+		Image[] ret = new Image[count];
+		for (int i = skip; i < skip + count; i++) {
+			ret[i-skip] = imageList.get(matchingCache[i]);
+		}
+		return ret;
 	}
 
 	public Image[] getImagesToMatch(Image img, int size){
@@ -412,24 +490,25 @@ public class GraphManager {
 		//		}
 		//		return arr;
 
-		int[] indexes = featureSimilarities.getMaxValuedEdgeIndexes(imageSet.indexOf(img), size);
+		int[] indexes = featureSimilarities.getMinValuedEdgeIndexes(imageList.indexOf(img), 0, size);
 		Image[] ret = new Image[size];
 		for (int i = 0; i < size; i++) {
-			ret[i] = imageSet.get(indexes[i]);
+			ret[i] = imageList.get(indexes[i]);
 		}
 		return ret;
 	}
 
 	public void setChoice(Image imgA, Image imgB, int choice){
-		int i = imageSet.indexOf(imgA);
-		int j = imageSet.indexOf(imgB);
+		int i = imageList.indexOf(imgA);
+		int j = imageList.indexOf(imgB);
 		choices.set(i, j, choice);
+		CanceriousLogger.info(String.format("%s %s %d", imgA.filename, imgB.filename, choice));
 		writeChoices();
 	}
 
 	public int getChoice(Image imgA, Image imgB){
-		int i = imageSet.indexOf(imgA);
-		int j = imageSet.indexOf(imgB);
+		int i = imageList.indexOf(imgA);
+		int j = imageList.indexOf(imgB);
 		return (int) choices.get(i, j);
 	}
 
@@ -458,7 +537,7 @@ public class GraphManager {
 		try {
 			File dat = CanceriousMain.getConfigurationManager().getDatabaseFileAsFile(CHOICES_DAT);
 			if(dat==null){
-				choices = new BidirectionalAdjecencyMatrix(imageSet.size(), -1);
+				choices = new BidirectionalAdjecencyMatrix(imageList.size(), -1);
 				return;
 			}
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dat));

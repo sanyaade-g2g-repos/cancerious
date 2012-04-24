@@ -45,4 +45,12 @@ public class ConfigurationManager {
 			return null;
 		}
 	}
+
+	public File getFeatureStore(){
+		try {
+			return new File(ConfigurationManager.class.getResource(featureStorePath).toURI());
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }

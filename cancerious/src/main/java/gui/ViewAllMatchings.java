@@ -51,7 +51,7 @@ public class ViewAllMatchings extends JPanel {
 
 		this.setLayout(new BorderLayout());
 		JPanel container = new JPanel();
-		int imgCount = CanceriousMain.getGraphManager().imageSet.size();
+		int imgCount = CanceriousMain.getGraphManager().imageList.size();
 		container.setBounds(0,0, 700, imgCount*50);
 
 		JScrollPane jScrollPane = new JScrollPane(container);
@@ -83,15 +83,15 @@ public class ViewAllMatchings extends JPanel {
 		container.add(lblRating, gbc_lblRating);
 
 		BidirectionalAdjecencyMatrix choices = CanceriousMain.getGraphManager().getChoices();
-		int imageCount = CanceriousMain.getGraphManager().imageSet.size();
+		int imageCount = CanceriousMain.getGraphManager().imageList.size();
 		doneList = new ArrayList<String>();
 
 		int rowIndex = 1;
 		for (int i = 0; i < imageCount; i++) {
-			final Image image1 = CanceriousMain.getGraphManager().imageSet.get(i);
+			final Image image1 = CanceriousMain.getGraphManager().imageList.get(i);
 			for (int j=0; j<choices.getAdjecencies(i).length;j++){
 				int rating = (int)choices.getAdjecencies(i)[j];
-				final Image image2 = CanceriousMain.getGraphManager().imageSet.get(j);
+				final Image image2 = CanceriousMain.getGraphManager().imageList.get(j);
 				String doneString = String.format("%d,%d", i, j);
 				String doneStringReversed = String.format("%d,%d", j, i);
 
@@ -173,8 +173,8 @@ public class ViewAllMatchings extends JPanel {
 							int i = Integer.parseInt(done.substring(0, done.indexOf(",")));
 							int j = Integer.parseInt(done.substring(done.indexOf(",")+1));
 							int rating = (int)choices.getAdjecencies(i)[j];
-							String f1name = CanceriousMain.getGraphManager().imageSet.get(i).filename;
-							String f2name = CanceriousMain.getGraphManager().imageSet.get(j).filename;
+							String f1name = CanceriousMain.getGraphManager().imageList.get(i).filename;
+							String f2name = CanceriousMain.getGraphManager().imageList.get(j).filename;
 							String line = String.format("%s %s %d%s", f1name,f2name,rating,linesep);
 							bw.write(line);
 						}
