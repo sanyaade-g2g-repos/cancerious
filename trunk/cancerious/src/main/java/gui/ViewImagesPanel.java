@@ -28,13 +28,13 @@ public class ViewImagesPanel extends JPanel {
 
 		this.setLayout(new BorderLayout());
 		JPanel container = new JPanel(new GridLayout(0, 3, 3, 3));
-		int imgCount = CanceriousMain.getGraphManager().imageSet.size();
+		int imgCount = CanceriousMain.getGraphManager().imageList.size();
 		container.setBounds(0,0, 700, imgCount*50);
 
 		JScrollPane jScrollPane = new JScrollPane(container);
 
 
-		for (Image img : CanceriousMain.getGraphManager().imageSet) {
+		for (Image img : CanceriousMain.getGraphManager().imageList) {
 			container.add(new ShowImage(img));
 		}
 

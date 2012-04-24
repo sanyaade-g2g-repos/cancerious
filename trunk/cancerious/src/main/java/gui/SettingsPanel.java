@@ -1,10 +1,17 @@
 package gui;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -13,6 +20,8 @@ import javax.swing.JTextField;
 
 import main.CanceriousMain;
 import manager.ConfigurationManager;
+import manager.GraphManager;
+import util.CanceriousLogger;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -26,18 +35,30 @@ public class SettingsPanel extends JPanel {
 	public SettingsPanel() {
 		super();
 
-		@SuppressWarnings("unused")
 		ConfigurationManager conf = CanceriousMain.getConfigurationManager();
 
-		this.setLayout(new FormLayout(
-				new ColumnSpec[] { FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC,
-						FormFactory.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"),
-						FormFactory.RELATED_GAP_COLSPEC, FormFactory.DEFAULT_COLSPEC, FormFactory.RELATED_GAP_COLSPEC,
-						ColumnSpec.decode("max(1dlu;default)"), }, new RowSpec[] { FormFactory.RELATED_GAP_ROWSPEC,
-						FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-						FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
-						FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-						FormFactory.RELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, }));
+		this.setLayout(new FormLayout(new ColumnSpec[] {
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(1dlu;default)"),},
+				new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("default:grow"),
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,}));
 
 		JLabel lblImageStoreLocation = new JLabel("Image Store Location");
 		this.add(lblImageStoreLocation, "2, 2, right, default");
@@ -126,7 +147,59 @@ public class SettingsPanel extends JPanel {
 		});
 		this.add(btnReload, "4, 8, left, default");
 
+		JLabel lblFeatures = new JLabel("Features");
+		add(lblFeatures, "2, 10, right, top");
+
+		featuresPanel = new JPanel();
+		featuresPanel.setLayout(new BoxLayout(featuresPanel, BoxLayout.PAGE_AXIS));
+		add(featuresPanel, "4, 10, fill, fill");
+
+		File featureStore = conf.getFeatureStore();
+		try{
+			for(File child:featureStore.listFiles()){
+				if (!child.getName().equals(GraphManager.FEATURE_STORE_TXT)) {
+					JCheckBox cb = new JCheckBox(child.getName());
+					featuresPanel.add(cb);					
+				}
+			}
+			File featureStoreTxt = CanceriousMain.getConfigurationManager().getFeatureAsFile(GraphManager.FEATURE_STORE_TXT);
+			BufferedReader br = new BufferedReader(new FileReader(featureStoreTxt));
+			String line;
+			while((line=br.readLine())!=null){
+				for(Component c : featuresPanel.getComponents()){
+					if(c instanceof JCheckBox){
+						if(((JCheckBox) c).getText().equals(line)){
+							((JCheckBox) c).setSelected(true);
+							break;
+						}
+					}
+				}
+			}
+			br.close();
+		}catch (Exception e) {
+
+		}
+
 		JButton btnSaveSettings = new JButton("Save Settings");
+		btnSaveSettings.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try{
+					File featureStoreTxt = CanceriousMain.getConfigurationManager().getFeatureAsFile(GraphManager.FEATURE_STORE_TXT);
+					BufferedWriter bw = new BufferedWriter(new FileWriter(featureStoreTxt));
+					for(Component c : featuresPanel.getComponents()){
+						if(c instanceof JCheckBox && ((JCheckBox) c).isSelected()){
+							bw.write(String.format("%s%n", ((JCheckBox) c).getText()));
+						}
+					}
+					bw.close();
+					CanceriousMain.getGraphManager().loadFeatures();
+					JOptionPane.showMessageDialog(SettingsPanel.this, "Settings saved and features reloaded.");
+				}catch (Exception e2) {
+					CanceriousLogger.error(e2);
+				}
+			}
+		});
 		this.add(btnSaveSettings, "2, 12");
 
 		JButton btnDiscardSettings = new JButton("Discard Settings");
@@ -136,5 +209,6 @@ public class SettingsPanel extends JPanel {
 
 	private static final long serialVersionUID = -8928464335165056558L;
 	private JTextField dbStoreField;
+	private JPanel featuresPanel;
 
 }

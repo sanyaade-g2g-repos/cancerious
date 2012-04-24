@@ -105,11 +105,11 @@ public class ImageRelations extends JPanel {
 
 		int value = similaritySlider.getValue();
 		BidirectionalAdjecencyMatrix choices = CanceriousMain.getGraphManager().getChoices();
-		int imageIndex = CanceriousMain.getGraphManager().imageSet.indexOf(image);
+		int imageIndex = CanceriousMain.getGraphManager().imageList.indexOf(image);
 		double[] values = choices.getAdjecencies(imageIndex);
 		for (int i = 0; i < values.length; i++) {
 			if (values[i] == value && i != imageIndex) {
-				final Image otherImage = CanceriousMain.getGraphManager().imageSet.get(i);
+				final Image otherImage = CanceriousMain.getGraphManager().imageList.get(i);
 				final ImageRater rater = new ImageRater(otherImage, value);
 				rater.getSlider().addChangeListener(new ChangeListener() {
 					@Override
