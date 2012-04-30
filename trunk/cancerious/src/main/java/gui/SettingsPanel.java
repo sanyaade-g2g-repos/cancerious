@@ -118,7 +118,7 @@ public class SettingsPanel extends JPanel {
 						//							JOptionPane.showMessageDialog(SettingsPanel.this, "Feature store is invalid.");
 						//							CanceriousLogger.warn(e);
 						//						}
-						//TODO LOAD FEATURES? 
+						//TODO LOAD FEATURES?
 						featureStoreField.setText(file.getPath());
 					}
 				}
@@ -136,16 +136,47 @@ public class SettingsPanel extends JPanel {
 		JButton dbStoreBrowse = new JButton("Browse");
 		add(dbStoreBrowse, "6, 6");
 
-		JLabel lblReloadAllData = new JLabel("Reload All Data");
+		JLabel lblReloadAllData = new JLabel("Distribution");
 		this.add(lblReloadAllData, "2, 8, right, default");
 
-		JButton btnReload = new JButton("Reload");
-		btnReload.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		this.add(btnReload, "4, 8, left, default");
+		JPanel panel = new JPanel();
+		add(panel, "4, 8, fill, fill");
+		panel.setLayout(new FormLayout(new ColumnSpec[] {
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("left:default"),},
+				new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,}));
+
+		JLabel lblFeature = new JLabel("Feature");
+		panel.add(lblFeature, "2, 2, right, default");
+
+		fromFeature = new JTextField();
+		fromFeature.setText(GraphManager.FROM_FEATURE+"");
+		panel.add(fromFeature, "4, 2, fill, default");
+		fromFeature.setColumns(10);
+
+		JLabel lblBfs = new JLabel("BFS");
+		panel.add(lblBfs, "2, 4, right, default");
+
+		fromBFS = new JTextField();
+		fromBFS.setText(GraphManager.FROM_BFS+"");
+		panel.add(fromBFS, "4, 4, fill, default");
+		fromBFS.setColumns(10);
+
+		JLabel lblRandom = new JLabel("Random");
+		panel.add(lblRandom, "2, 6, right, default");
+
+		fromRandom = new JTextField();
+		fromRandom.setText(GraphManager.FROM_RANDOM+"");
+		panel.add(fromRandom, "4, 6, fill, default");
+		fromRandom.setColumns(10);
 
 		JLabel lblFeatures = new JLabel("Features");
 		add(lblFeatures, "2, 10, right, top");
@@ -159,7 +190,7 @@ public class SettingsPanel extends JPanel {
 			for(File child:featureStore.listFiles()){
 				if (!child.getName().equals(GraphManager.FEATURE_STORE_TXT)) {
 					JCheckBox cb = new JCheckBox(child.getName());
-					featuresPanel.add(cb);					
+					featuresPanel.add(cb);
 				}
 			}
 			File featureStoreTxt = CanceriousMain.getConfigurationManager().getFeatureAsFile(GraphManager.FEATURE_STORE_TXT);
@@ -180,7 +211,7 @@ public class SettingsPanel extends JPanel {
 
 		}
 
-		JButton btnSaveSettings = new JButton("Save Settings");
+		JButton btnSaveSettings = new JButton("Save & Reload");
 		btnSaveSettings.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -202,13 +233,16 @@ public class SettingsPanel extends JPanel {
 		});
 		this.add(btnSaveSettings, "2, 12");
 
-		JButton btnDiscardSettings = new JButton("Discard Settings");
-		this.add(btnDiscardSettings, "4, 12, left, default");
+		//		JButton btnDiscardSettings = new JButton("Discard Settings");
+		//		this.add(btnDiscardSettings, "4, 12, left, default");
 
 	}
 
 	private static final long serialVersionUID = -8928464335165056558L;
 	private JTextField dbStoreField;
 	private JPanel featuresPanel;
+	private JTextField fromFeature;
+	private JTextField fromBFS;
+	private JTextField fromRandom;
 
 }

@@ -94,6 +94,12 @@ public class ViewAllMatchings extends JPanel {
 				final Image image2 = CanceriousMain.getGraphManager().imageList.get(j);
 				String doneString = String.format("%d,%d", i, j);
 				String doneStringReversed = String.format("%d,%d", j, i);
+				if(image1.fileHandler==null){
+					image1.openHandler();
+				}
+				if(image2.fileHandler==null){
+					image2.openHandler();
+				}
 
 				if(rating>=0 && i!=j && !doneList.contains(doneStringReversed)){
 
@@ -167,6 +173,7 @@ public class ViewAllMatchings extends JPanel {
 						BufferedWriter bw = new BufferedWriter(new FileWriter(fc.getSelectedFile()));
 						String linesep = System.getProperty("line.separator");
 						bw.write(new Date().toString()+linesep);
+						bw.write(CanceriousMain.getConfigurationManager().getImageStore().getPath()+linesep);
 						bw.write("image1 image2 rating"+linesep);
 						BidirectionalAdjecencyMatrix choices = CanceriousMain.getGraphManager().getChoices();
 						for(String done:doneList){
