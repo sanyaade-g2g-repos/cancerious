@@ -407,9 +407,9 @@ public class GraphManager {
 
 	private int[] matchingCache = null;
 	private Image matchingImage = null;
-	static final int FROM_FEATURE = 2;
-	static final int FROM_BFS = 1;
-	static final int FROM_RANDOM = 2;
+	public static int FROM_FEATURE = 2;
+	public static int FROM_BFS = 1;
+	public static int FROM_RANDOM = 2;
 
 
 	public Image[] getImagesToMatch(Image img, int skip, int count){

@@ -1,13 +1,18 @@
 package manager;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class ConfigurationManager {
+public class ConfigurationManager implements Serializable{
 
 	//	public File imageStore;
 	//	public File featureStore;
 	//	public File dataStore;
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public String imageStorePath;
 	public String featureStorePath;
 	public String dbStorePath;
@@ -42,6 +47,14 @@ public class ConfigurationManager {
 			return new File(ConfigurationManager.class.getResource(dbStorePath+"/"+name).toURI());
 		} catch (Exception e) {
 			//			CanceriousLogger.info(e);
+			return null;
+		}
+	}
+
+	public File getImageStore(){
+		try {
+			return new File(ConfigurationManager.class.getResource(imageStorePath).toURI());
+		} catch (Exception e) {
 			return null;
 		}
 	}

@@ -8,6 +8,7 @@ import javax.swing.JScrollPane;
 
 import main.CanceriousMain;
 import entity.Image;
+import entity.SubImage;
 
 
 /**
@@ -35,11 +36,11 @@ public class ViewImagesPanel extends JPanel {
 
 
 		for (Image img : CanceriousMain.getGraphManager().imageList) {
-			container.add(new ShowImage(img));
+			container.add(new ShowImage(ShowImage.SELECT_SUBIMAGE_MODE, new SubImage(img)));
 		}
 
 		this.add(jScrollPane, BorderLayout.CENTER);
-		
+
 		revalidate();
 		repaint();
 	}
