@@ -8,7 +8,6 @@ import javax.swing.JScrollPane;
 
 import main.CanceriousMain;
 import entity.Image;
-import entity.SubImage;
 
 
 /**
@@ -16,11 +15,11 @@ import entity.SubImage;
  * @see ShowImage
  * @author SEB
  */
-public class ViewImagesPanel extends JPanel {
+public class ViewAllImages extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	public ViewImagesPanel(){
+	public ViewAllImages(){
 		showAll();
 	}
 
@@ -36,7 +35,7 @@ public class ViewImagesPanel extends JPanel {
 
 
 		for (Image img : CanceriousMain.getGraphManager().imageList) {
-			container.add(new ShowImage(ShowImage.SELECT_SUBIMAGE_MODE, new SubImage(img)));
+			container.add(new ShowImage(ShowImage.VIEW_ALL_MODE, img));
 		}
 
 		this.add(jScrollPane, BorderLayout.CENTER);

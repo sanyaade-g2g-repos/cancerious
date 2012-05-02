@@ -20,19 +20,19 @@ import javax.swing.JTextField;
 
 import main.CanceriousMain;
 import manager.ConfigurationManager;
-import manager.GraphManager;
 import util.CanceriousLogger;
+import util.Constants;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-public class SettingsPanel extends JPanel {
+public class Settings extends JPanel {
 	private JTextField imageStoreField;
 	private JTextField featureStoreField;
 
-	public SettingsPanel() {
+	public Settings() {
 		super();
 
 		ConfigurationManager conf = CanceriousMain.getConfigurationManager();
@@ -158,7 +158,7 @@ public class SettingsPanel extends JPanel {
 		panel.add(lblFeature, "2, 2, right, default");
 
 		fromFeature = new JTextField();
-		fromFeature.setText(GraphManager.FROM_FEATURE+"");
+		fromFeature.setText(CanceriousMain.getConfigurationManager().distributionFromFeature.toString());
 		panel.add(fromFeature, "4, 2, fill, default");
 		fromFeature.setColumns(10);
 
@@ -166,7 +166,7 @@ public class SettingsPanel extends JPanel {
 		panel.add(lblBfs, "2, 4, right, default");
 
 		fromBFS = new JTextField();
-		fromBFS.setText(GraphManager.FROM_BFS+"");
+		fromBFS.setText(CanceriousMain.getConfigurationManager().distributionFromBFS.toString());
 		panel.add(fromBFS, "4, 4, fill, default");
 		fromBFS.setColumns(10);
 
@@ -174,7 +174,7 @@ public class SettingsPanel extends JPanel {
 		panel.add(lblRandom, "2, 6, right, default");
 
 		fromRandom = new JTextField();
-		fromRandom.setText(GraphManager.FROM_RANDOM+"");
+		fromRandom.setText(CanceriousMain.getConfigurationManager().distributionFromRandom.toString());
 		panel.add(fromRandom, "4, 6, fill, default");
 		fromRandom.setColumns(10);
 
@@ -188,12 +188,12 @@ public class SettingsPanel extends JPanel {
 		File featureStore = conf.getFeatureStore();
 		try{
 			for(File child:featureStore.listFiles()){
-				if (!child.getName().equals(GraphManager.FEATURE_STORE_TXT)) {
+				if (!child.getName().equals(Constants.FEATURE_STORE_TXT)) {
 					JCheckBox cb = new JCheckBox(child.getName());
 					featuresPanel.add(cb);
 				}
 			}
-			File featureStoreTxt = CanceriousMain.getConfigurationManager().getFeatureAsFile(GraphManager.FEATURE_STORE_TXT);
+			File featureStoreTxt = CanceriousMain.getConfigurationManager().getFeatureAsFile(Constants.FEATURE_STORE_TXT);
 			BufferedReader br = new BufferedReader(new FileReader(featureStoreTxt));
 			String line;
 			while((line=br.readLine())!=null){
@@ -216,7 +216,7 @@ public class SettingsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try{
-					File featureStoreTxt = CanceriousMain.getConfigurationManager().getFeatureAsFile(GraphManager.FEATURE_STORE_TXT);
+					File featureStoreTxt = CanceriousMain.getConfigurationManager().getFeatureAsFile(Constants.FEATURE_STORE_TXT);
 					BufferedWriter bw = new BufferedWriter(new FileWriter(featureStoreTxt));
 					for(Component c : featuresPanel.getComponents()){
 						if(c instanceof JCheckBox && ((JCheckBox) c).isSelected()){
@@ -225,7 +225,7 @@ public class SettingsPanel extends JPanel {
 					}
 					bw.close();
 					CanceriousMain.getGraphManager().loadFeatures();
-					JOptionPane.showMessageDialog(SettingsPanel.this, "Settings saved and features reloaded.");
+					JOptionPane.showMessageDialog(Settings.this, "Settings saved and features reloaded.");
 				}catch (Exception e2) {
 					CanceriousLogger.error(e2);
 				}

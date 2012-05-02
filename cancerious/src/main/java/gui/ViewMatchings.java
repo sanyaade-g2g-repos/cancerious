@@ -30,7 +30,7 @@ import util.BidirectionalAdjecencyMatrix;
 import util.CanceriousLogger;
 import entity.Image;
 
-public class ViewAllMatchings extends JPanel {
+public class ViewMatchings extends JPanel {
 
 	/**
 	 * 
@@ -38,7 +38,7 @@ public class ViewAllMatchings extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private List<String> doneList;
 
-	public ViewAllMatchings(){
+	public ViewMatchings(){
 		try {
 			showAll();
 		} catch (MalformedURLException e) {
@@ -167,7 +167,7 @@ public class ViewAllMatchings extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fc = new JFileChooser();
-				fc.showSaveDialog(ViewAllMatchings.this);
+				fc.showSaveDialog(ViewMatchings.this);
 				if(fc.getSelectedFile()!=null){
 					try{
 						BufferedWriter bw = new BufferedWriter(new FileWriter(fc.getSelectedFile()));
@@ -186,7 +186,7 @@ public class ViewAllMatchings extends JPanel {
 							bw.write(line);
 						}
 						bw.close();
-						JOptionPane.showMessageDialog(ViewAllMatchings.this, "Export done successfully.");
+						JOptionPane.showMessageDialog(ViewMatchings.this, "Export done successfully.");
 					}catch (Exception e) {
 						CanceriousLogger.error(e);
 					}

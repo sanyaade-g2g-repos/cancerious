@@ -20,13 +20,13 @@ import entity.Image;
  * sol üstteki ImageToMatch, diger 5 i ImageRater olmak üzere. 
  * @author SEB
  */
-public class MatchImagesPanel extends JPanel {
+public class MatchImages extends JPanel {
 
 	private Image headImage;
 
 	private int currentN;
 
-	public MatchImagesPanel() {
+	public MatchImages() {
 		GridBagLayout gbl_matchImages = new GridBagLayout();
 		gbl_matchImages.columnWidths = new int[] { 200, 200, 200 };
 		gbl_matchImages.rowHeights = new int[] { 200, 200, 50};

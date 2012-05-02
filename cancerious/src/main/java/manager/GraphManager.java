@@ -1,5 +1,13 @@
 package manager;
 
+import static util.Constants.CHOICES_DAT;
+import static util.Constants.CHOICES_TXT;
+import static util.Constants.FEATURE_CACHE_TXT;
+import static util.Constants.FEATURE_STORE_TXT;
+import static util.Constants.IMAGE_STORE_TXT;
+import static util.Constants.SIMILARITIES_DAT;
+import static util.Constants.SIMILARITIES_TXT;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,14 +37,6 @@ import entity.FeatureValue;
 import entity.Image;
 
 public class GraphManager {
-
-	public static final String SIMILARITIES_TXT = "similarities.txt";
-	public static final String SIMILARITIES_DAT = "similarities.dat";
-	public static final String CHOICES_TXT = "choices.txt";
-	public static final String CHOICES_DAT = "choices.dat";
-	public static final String IMAGE_STORE_TXT = "image_store.txt";
-	public static final String FEATURE_STORE_TXT = "feature_store.txt";
-	public static final String FEATURE_CACHE_TXT = "feature_cache.txt";
 
 	public List<Image> imageList;
 	public List<Feature> featureList;
@@ -407,12 +407,12 @@ public class GraphManager {
 
 	private int[] matchingCache = null;
 	private Image matchingImage = null;
-	public static int FROM_FEATURE = 2;
-	public static int FROM_BFS = 1;
-	public static int FROM_RANDOM = 2;
-
 
 	public Image[] getImagesToMatch(Image img, int skip, int count){
+		int FROM_FEATURE = CanceriousMain.getConfigurationManager().distributionFromFeature;
+		int FROM_BFS = CanceriousMain.getConfigurationManager().distributionFromBFS;
+		//int FROM_RANDOM = CanceriousMain.getConfigurationManager().distributionFromRandom;
+
 		boolean recalculate = false;
 		if(img.equals(matchingImage)){
 			for (int i = skip; i < skip + count; i++) {
