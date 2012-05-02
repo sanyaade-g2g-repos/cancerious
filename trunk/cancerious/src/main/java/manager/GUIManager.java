@@ -1,9 +1,11 @@
 package manager;
 
-import gui.MatchImagesPanel;
-import gui.SettingsPanel;
-import gui.ViewAllMatchings;
-import gui.ViewImagesPanel;
+import gui.MatchImages;
+import gui.MatchSubImages;
+import gui.Settings;
+import gui.ViewAllImages;
+import gui.ViewMatchings;
+import gui.ViewSubMatchings;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,10 +18,12 @@ import javax.swing.JTabbedPane;
 public class GUIManager extends JFrame {
 
 	private static final long serialVersionUID = -4465177426944215121L;
-	private MatchImagesPanel matchImages;
-	private ViewImagesPanel viewImages;
-	private SettingsPanel settings;
-	private ViewAllMatchings viewAllMatchings;
+	private MatchImages matchImages;
+	private MatchSubImages matchSubImages;
+	private ViewAllImages viewAllImages;
+	private Settings settings;
+	private ViewMatchings viewMatchings;
+	private ViewSubMatchings viewSubMatchings;
 
 	public GUIManager() {
 		addWindowListener(new WindowAdapter() {
@@ -35,32 +39,38 @@ public class GUIManager extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
-		matchImages = new MatchImagesPanel();
+		matchImages = new MatchImages();
 		tabbedPane.addTab("Match Images", null, matchImages, null);
 
-		viewImages = new ViewImagesPanel();
-		tabbedPane.addTab("View Images", null, viewImages, null);
-		
-		viewAllMatchings = new ViewAllMatchings();
-		tabbedPane.addTab("View All Matchings", null, viewAllMatchings, null);
+		matchSubImages = new MatchSubImages();
+		tabbedPane.addTab("Match Sub Images", null, matchSubImages, null);
 
-		settings = new SettingsPanel();
+		viewMatchings = new ViewMatchings();
+		tabbedPane.addTab("View Matchings", null, viewMatchings, null);
+
+		viewSubMatchings = new ViewSubMatchings();
+		tabbedPane.addTab("View Sub Matchings", null, viewSubMatchings, null);
+
+		viewAllImages = new ViewAllImages();
+		tabbedPane.addTab("View All Images", null, viewAllImages, null);
+
+		settings = new Settings();
 		tabbedPane.addTab("Settings", null, settings, null);
 	}
 
-	public MatchImagesPanel getMatchImages() {
+	public MatchImages getMatchImages() {
 		return matchImages;
 	}
 
-	public ViewImagesPanel getViewImages() {
-		return viewImages;
+	public ViewAllImages getViewImages() {
+		return viewAllImages;
 	}
 
-	public ViewAllMatchings getViewAllMatchings() {
-		return viewAllMatchings;
+	public ViewMatchings getViewAllMatchings() {
+		return viewMatchings;
 	}
 
-	public SettingsPanel getSettings() {
+	public Settings getSettings() {
 		return settings;
 	}
 
