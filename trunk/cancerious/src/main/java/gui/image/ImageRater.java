@@ -1,4 +1,4 @@
-package gui;
+package gui.image;
 
 import java.awt.BorderLayout;
 import java.net.MalformedURLException;

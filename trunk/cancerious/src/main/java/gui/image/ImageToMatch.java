@@ -1,4 +1,4 @@
-package gui;
+package gui.image;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import main.CanceriousMain;
 import entity.Image;
 
 public class ImageToMatch extends JPanel {
@@ -39,7 +40,7 @@ public class ImageToMatch extends JPanel {
 	}
 
 	public void nextImage(){
-		((MatchImages)this.getParent()).nextImage(5, true);
+		CanceriousMain.getGuiManager().getMatchImages().nextImage(0, true);
 	}
 
 	private static final long serialVersionUID = -2492212483685159320L;

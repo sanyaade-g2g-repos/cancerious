@@ -1,4 +1,4 @@
-package gui;
+package gui.image;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

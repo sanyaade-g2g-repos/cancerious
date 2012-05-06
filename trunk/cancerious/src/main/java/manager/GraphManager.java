@@ -35,6 +35,7 @@ import util.CanceriousLogger;
 import entity.Feature;
 import entity.FeatureValue;
 import entity.Image;
+import entity.SubImageMatch;
 
 public class GraphManager {
 
@@ -44,6 +45,8 @@ public class GraphManager {
 	private BidirectionalAdjecencyMatrix featureSimilarities;
 
 	private BidirectionalAdjecencyMatrix choices;
+
+	private List<SubImageMatch> subImageMatches = new ArrayList<SubImageMatch>();
 
 	private boolean reCalculateAllFeatures;
 
@@ -568,6 +571,10 @@ public class GraphManager {
 
 	public void setChoices(BidirectionalAdjecencyMatrix choices) {
 		this.choices = choices;
+	}
+
+	public List<SubImageMatch> getSubImageMatches() {
+		return subImageMatches;
 	}
 
 
