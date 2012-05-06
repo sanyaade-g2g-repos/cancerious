@@ -20,6 +20,7 @@ import main.CanceriousMain;
 import util.BidirectionalAdjecencyMatrix;
 import util.CanceriousLogger;
 import entity.Image;
+import gui.image.ImageRater;
 
 public class ImageRelations extends JPanel {
 

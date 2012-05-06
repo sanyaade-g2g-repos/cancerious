@@ -1,8 +1,8 @@
-package gui;
+package gui.subimage;
 
 import javax.swing.JPanel;
 
-public class MatchSubImages extends JPanel {
+public class ViewSubMatchings extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 

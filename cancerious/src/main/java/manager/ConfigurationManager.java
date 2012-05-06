@@ -40,9 +40,9 @@ public class ConfigurationManager implements Serializable {
 			imageStorePath = "/image_store";
 			featureStorePath = "/feature_store";
 			dbStorePath = "/cancerious_store";
-			distributionFromFeature = 2;
+			distributionFromFeature = 3;
 			distributionFromBFS = 1;
-			distributionFromRandom = 2;
+			distributionFromRandom = 1;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

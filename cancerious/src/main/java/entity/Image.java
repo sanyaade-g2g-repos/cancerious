@@ -35,4 +35,9 @@ public class Image {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "Image [id=" + id + ", filename=" + filename + "]";
+	}
+
 }

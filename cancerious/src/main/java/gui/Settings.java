@@ -16,7 +16,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import main.CanceriousMain;
 import manager.ConfigurationManager;
@@ -157,26 +159,26 @@ public class Settings extends JPanel {
 		JLabel lblFeature = new JLabel("Feature");
 		panel.add(lblFeature, "2, 2, right, default");
 
-		fromFeature = new JTextField();
-		fromFeature.setText(CanceriousMain.getConfigurationManager().distributionFromFeature.toString());
-		panel.add(fromFeature, "4, 2, fill, default");
-		fromFeature.setColumns(10);
+		fromFeature = new JSpinner();
+		fromFeature.setModel(new SpinnerNumberModel(0, 0, 5, 1));
+		fromFeature.setValue(CanceriousMain.getConfigurationManager().distributionFromFeature);
+		panel.add(fromFeature, "4, 2");
 
 		JLabel lblBfs = new JLabel("BFS");
 		panel.add(lblBfs, "2, 4, right, default");
 
-		fromBFS = new JTextField();
-		fromBFS.setText(CanceriousMain.getConfigurationManager().distributionFromBFS.toString());
-		panel.add(fromBFS, "4, 4, fill, default");
-		fromBFS.setColumns(10);
+		fromBFS = new JSpinner();
+		fromBFS.setModel(new SpinnerNumberModel(0, 0, 5, 1));
+		fromBFS.setValue(CanceriousMain.getConfigurationManager().distributionFromBFS);
+		panel.add(fromBFS, "4, 4");
 
 		JLabel lblRandom = new JLabel("Random");
 		panel.add(lblRandom, "2, 6, right, default");
 
-		fromRandom = new JTextField();
-		fromRandom.setText(CanceriousMain.getConfigurationManager().distributionFromRandom.toString());
-		panel.add(fromRandom, "4, 6, fill, default");
-		fromRandom.setColumns(10);
+		fromRandom = new JSpinner();
+		fromRandom.setModel(new SpinnerNumberModel(0, 0, 5, 1));
+		fromRandom.setValue(CanceriousMain.getConfigurationManager().distributionFromRandom);
+		panel.add(fromRandom, "4, 6");
 
 		JLabel lblFeatures = new JLabel("Features");
 		add(lblFeatures, "2, 10, right, top");
@@ -216,6 +218,7 @@ public class Settings extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try{
+					//write feature store
 					File featureStoreTxt = CanceriousMain.getConfigurationManager().getFeatureAsFile(Constants.FEATURE_STORE_TXT);
 					BufferedWriter bw = new BufferedWriter(new FileWriter(featureStoreTxt));
 					for(Component c : featuresPanel.getComponents()){
@@ -223,6 +226,11 @@ public class Settings extends JPanel {
 							bw.write(String.format("%s%n", ((JCheckBox) c).getText()));
 						}
 					}
+					//write dist settings
+					CanceriousMain.getConfigurationManager().distributionFromFeature = (Integer) fromFeature.getValue();
+					CanceriousMain.getConfigurationManager().distributionFromBFS = (Integer) fromBFS.getValue();
+					CanceriousMain.getConfigurationManager().distributionFromRandom = (Integer) fromRandom.getValue();
+
 					bw.close();
 					CanceriousMain.getGraphManager().loadFeatures();
 					JOptionPane.showMessageDialog(Settings.this, "Settings saved and features reloaded.");
@@ -241,8 +249,8 @@ public class Settings extends JPanel {
 	private static final long serialVersionUID = -8928464335165056558L;
 	private JTextField dbStoreField;
 	private JPanel featuresPanel;
-	private JTextField fromFeature;
-	private JTextField fromBFS;
-	private JTextField fromRandom;
+	private JSpinner fromFeature;
+	private JSpinner fromBFS;
+	private JSpinner fromRandom;
 
 }

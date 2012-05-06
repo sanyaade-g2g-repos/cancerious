@@ -1,11 +1,11 @@
 package manager;
 
-import gui.MatchImages;
-import gui.MatchSubImages;
 import gui.Settings;
 import gui.ViewAllImages;
-import gui.ViewMatchings;
-import gui.ViewSubMatchings;
+import gui.image.MatchImages;
+import gui.image.ViewMatchings;
+import gui.subimage.MatchSubImages;
+import gui.subimage.ViewSubMatchings;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -72,6 +72,22 @@ public class GUIManager extends JFrame {
 
 	public Settings getSettings() {
 		return settings;
+	}
+
+	public MatchSubImages getMatchSubImages() {
+		return matchSubImages;
+	}
+
+	public ViewAllImages getViewAllImages() {
+		return viewAllImages;
+	}
+
+	public ViewMatchings getViewMatchings() {
+		return viewMatchings;
+	}
+
+	public ViewSubMatchings getViewSubMatchings() {
+		return viewSubMatchings;
 	}
 
 }
