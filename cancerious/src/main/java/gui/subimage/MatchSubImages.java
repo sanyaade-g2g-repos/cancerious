@@ -60,27 +60,27 @@ public class MatchSubImages extends JPanel {
 		}
 		int count = 0;
 		for (SubImage select : showImage1.getMultiSelects()) {
-			subImageMatches.add(new SubImageMatch(headSubImage, select));
+			subImageMatches.add(new SubImageMatch(headSubImage.clone(), select));
 			count++;
 		}
 		showImage1.clear();
 		for (SubImage select : showImage2.getMultiSelects()) {
-			subImageMatches.add(new SubImageMatch(headSubImage, select));
+			subImageMatches.add(new SubImageMatch(headSubImage.clone(), select));
 			count++;
 		}
 		showImage2.clear();
 		for (SubImage select : showImage3.getMultiSelects()) {
-			subImageMatches.add(new SubImageMatch(headSubImage, select));
+			subImageMatches.add(new SubImageMatch(headSubImage.clone(), select));
 			count++;
 		}
 		showImage3.clear();
 		for (SubImage select : showImage4.getMultiSelects()) {
-			subImageMatches.add(new SubImageMatch(headSubImage, select));
+			subImageMatches.add(new SubImageMatch(headSubImage.clone(), select));
 			count++;
 		}
 		showImage4.clear();
 		for (SubImage select : showImage5.getMultiSelects()) {
-			subImageMatches.add(new SubImageMatch(headSubImage, select));
+			subImageMatches.add(new SubImageMatch(headSubImage.clone(), select));
 			count++;
 		}
 		showImage5.clear();
