@@ -104,6 +104,16 @@ public class SubImage implements Serializable{
 		return valid;
 	}
 	
+	@Override
+	public SubImage clone() {
+		SubImage clone = new SubImage(this.image);
+		clone.leftTopX = this.leftTopX;
+		clone.leftTopY = this.leftTopY;
+		clone.rightBottomX = this.rightBottomX;
+		clone.rightBottomY = this.rightBottomY;
+		return clone;
+	}
+
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
 		out.writeInt(leftTopY);
 		out.writeInt(leftTopY);

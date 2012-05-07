@@ -40,13 +40,13 @@ public class ViewMatchings extends JPanel {
 
 	public ViewMatchings(){
 		try {
-			showAll();
+			updateView();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void showAll() throws MalformedURLException{
+	public void updateView() throws MalformedURLException{
 		this.removeAll();
 
 		this.setLayout(new BorderLayout());
@@ -154,7 +154,7 @@ public class ViewMatchings extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					showAll();
+					updateView();
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
