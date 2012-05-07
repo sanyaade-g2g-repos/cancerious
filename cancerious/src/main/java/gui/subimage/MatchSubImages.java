@@ -5,12 +5,16 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import main.CanceriousMain;
+import util.CanceriousLogger;
 import entity.Image;
+import entity.SubImage;
+import entity.SubImageMatch;
 import gui.ShowImage;
 
 public class MatchSubImages extends JPanel {
@@ -48,6 +52,49 @@ public class MatchSubImages extends JPanel {
 
 	public void saveAll() {
 
+		List<SubImageMatch> subImageMatches = CanceriousMain.getGraphManager().getSubImageMatches();
+		SubImage headSubImage = imageToMatch.getShowImage().getSubImage();
+		if (!headSubImage.isValid()) {
+			CanceriousLogger.infoWithDisplay("Please select a region in head image first.");
+			return;
+		}
+		int count = 0;
+		for (SubImage select : showImage1.getMultiSelects()) {
+			subImageMatches.add(new SubImageMatch(headSubImage, select));
+			count++;
+		}
+		showImage1.clear();
+		for (SubImage select : showImage2.getMultiSelects()) {
+			subImageMatches.add(new SubImageMatch(headSubImage, select));
+			count++;
+		}
+		showImage2.clear();
+		for (SubImage select : showImage3.getMultiSelects()) {
+			subImageMatches.add(new SubImageMatch(headSubImage, select));
+			count++;
+		}
+		showImage3.clear();
+		for (SubImage select : showImage4.getMultiSelects()) {
+			subImageMatches.add(new SubImageMatch(headSubImage, select));
+			count++;
+		}
+		showImage4.clear();
+		for (SubImage select : showImage5.getMultiSelects()) {
+			subImageMatches.add(new SubImageMatch(headSubImage, select));
+			count++;
+		}
+		showImage5.clear();
+		
+		if (count > 0) {
+			headSubImage.reset();
+			imageToMatch.getShowImage().repaint();
+			CanceriousMain.getGraphManager().writeChoices();
+			CanceriousLogger.infoWithDisplay(String.format("%d submatchings saved", count));
+		}
+		else {
+			CanceriousLogger.infoWithDisplay("Please select at least one region in matching images.");
+		}
+		//nextImage();
 	}
 
 	private void nextImage(int n, boolean change) {
