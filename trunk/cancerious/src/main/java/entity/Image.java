@@ -6,7 +6,7 @@ import java.util.Set;
 
 import main.CanceriousMain;
 
-public class Image {
+public class Image{
 
 	public Integer id;
 	public String filename;
@@ -39,5 +39,6 @@ public class Image {
 	public String toString() {
 		return "Image [id=" + id + ", filename=" + filename + "]";
 	}
+	
 
 }

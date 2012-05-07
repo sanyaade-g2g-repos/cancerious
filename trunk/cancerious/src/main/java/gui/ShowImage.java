@@ -89,13 +89,7 @@ public class ShowImage extends JPanel implements MouseListener, MouseMotionListe
 			CanceriousMain.getGuiManager().getViewImages().repaint();
 		}
 		else if ((e.getButton()==MouseEvent.BUTTON2 || e.getButton()==MouseEvent.BUTTON3)) {
-			if (mode==SELECT_SUBIMAGE_MULTISELECT_MODE) {
-				multiSelects.clear();
-			}
-			else if (mode==SELECT_SUBIMAGE_MODE) {
-				subImage.reset();
-			}
-			repaint();
+			clear();
 		}
 	}
 
@@ -220,6 +214,16 @@ public class ShowImage extends JPanel implements MouseListener, MouseMotionListe
 			}
 		}
 		return returnedList;
+	}
+	
+	public void clear(){
+		if (mode==SELECT_SUBIMAGE_MULTISELECT_MODE) {
+			multiSelects.clear();
+		}
+		else if (mode==SELECT_SUBIMAGE_MODE) {
+			subImage.reset();
+		}
+		repaint();
 	}
 
 }

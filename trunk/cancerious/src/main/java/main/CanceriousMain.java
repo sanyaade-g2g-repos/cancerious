@@ -28,6 +28,7 @@ public class CanceriousMain {
 		configurationManager = new ConfigurationManager();
 		emailManager = new EmailManager();
 		graphManager = new GraphManager();
+		graphManager.init();
 		guiManager = new GUIManager();
 	}
 

@@ -2,6 +2,8 @@ package util;
 
 import javax.swing.JOptionPane;
 
+import main.CanceriousMain;
+
 import org.apache.log4j.Logger;
 
 public class CanceriousLogger {
@@ -19,7 +21,7 @@ public class CanceriousLogger {
 		else{
 			logger.error(message);			
 		}
-		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(CanceriousMain.getGuiManager(), message, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void info(Object message) {
@@ -38,7 +40,12 @@ public class CanceriousLogger {
 		else{
 			logger.warn(message);
 		}
-		JOptionPane.showMessageDialog(null, message, "Warning", JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(CanceriousMain.getGuiManager(), message, "Warning", JOptionPane.WARNING_MESSAGE);
+	}
+	
+	public static void infoWithDisplay(Object message){
+		info(message);
+		JOptionPane.showMessageDialog(CanceriousMain.getGuiManager(), message, "Info", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 }

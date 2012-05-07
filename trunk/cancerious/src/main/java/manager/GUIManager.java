@@ -33,7 +33,7 @@ public class GUIManager extends JFrame {
 			}
 		});
 		setVisible(true);
-		setMinimumSize(new Dimension(700, 550));
+		setMinimumSize(new Dimension(710, 560));
 		setTitle("Cancerious");
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);

@@ -1,8 +1,15 @@
 package entity;
 
+import java.io.IOException;
+import java.io.Serializable;
 
-public class SubImage {
+import main.CanceriousMain;
 
+
+public class SubImage implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	int leftTopX, leftTopY, rightBottomX, rightBottomY;
 	Image image;
 
@@ -96,4 +103,23 @@ public class SubImage {
 		}
 		return valid;
 	}
+	
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+		out.writeInt(leftTopY);
+		out.writeInt(leftTopY);
+		out.writeInt(rightBottomX);
+		out.writeInt(rightBottomY);
+		out.writeInt(image.id);
+	}
+
+	private void readObject(java.io.ObjectInputStream in) throws IOException,
+			ClassNotFoundException {
+		leftTopX = in.readInt();
+		leftTopY = in.readInt();
+		rightBottomX = in.readInt();
+		rightBottomY = in.readInt();
+		int id = in.readInt();
+		image = CanceriousMain.getGraphManager().imageList.get(id);
+	}
+
 }

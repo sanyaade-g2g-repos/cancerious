@@ -7,6 +7,7 @@ import static util.Constants.FEATURE_STORE_TXT;
 import static util.Constants.IMAGE_STORE_TXT;
 import static util.Constants.SIMILARITIES_DAT;
 import static util.Constants.SIMILARITIES_TXT;
+import static util.Constants.SUBCHOICES_DAT;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -51,7 +52,9 @@ public class GraphManager {
 	private boolean reCalculateAllFeatures;
 
 	public GraphManager(){
-
+	}
+	
+	public void init(){
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -515,7 +518,7 @@ public class GraphManager {
 		return (int) choices.get(i, j);
 	}
 
-	private void writeChoices(){
+	public void writeChoices(){
 		try {
 			ObjectOutputStream fos = new ObjectOutputStream(new FileOutputStream(new File(CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("."),CHOICES_DAT)));
 			fos.writeObject(choices);
@@ -526,6 +529,10 @@ public class GraphManager {
 			bw = new BufferedWriter(new FileWriter(new File(CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("."),SIMILARITIES_TXT)));
 			bw.write(featureSimilarities.toString());
 			bw.close();
+			
+			fos = new ObjectOutputStream(new FileOutputStream(new File(CanceriousMain.getConfigurationManager().getDatabaseFileAsFile("."),SUBCHOICES_DAT)));
+			fos.writeObject(subImageMatches);
+			fos.close();
 			//CanceriousLogger.info("Choices Written");
 		} catch (FileNotFoundException e) {
 			CanceriousLogger.error(e);
@@ -536,15 +543,28 @@ public class GraphManager {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void readChoices(){
 		try {
-			File dat = CanceriousMain.getConfigurationManager().getDatabaseFileAsFile(CHOICES_DAT);
-			if(dat==null){
+			File choicesdat = CanceriousMain.getConfigurationManager().getDatabaseFileAsFile(CHOICES_DAT);
+			if(choicesdat==null){
 				choices = new BidirectionalAdjecencyMatrix(imageList.size(), -1);
-				return;
 			}
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dat));
-			choices = (BidirectionalAdjecencyMatrix) ois.readObject();
+			else {
+				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(choicesdat));
+				choices = (BidirectionalAdjecencyMatrix) ois.readObject();
+				ois.close();
+			}
+			
+			File subchoicesdat = CanceriousMain.getConfigurationManager().getDatabaseFileAsFile(SUBCHOICES_DAT);
+			if (subchoicesdat==null) {
+				subImageMatches = new ArrayList<SubImageMatch>();
+			}
+			else {
+				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(subchoicesdat));
+				subImageMatches = (List<SubImageMatch>) ois.readObject();
+				ois.close();
+			}
 		} catch (FileNotFoundException e) {
 			CanceriousLogger.error(e);
 			return;
