@@ -448,7 +448,7 @@ public class GraphManager {
 			//bfs
 			int[] maxValuedEdgeIndexesFromBfs = choices.getMaxValuedEdgeIndexes(img.id, page*FROM_BFS, FROM_BFS);
 			for (int i = 0; i < maxValuedEdgeIndexesFromBfs.length; i++) {
-				if (!indexes.contains(maxValuedEdgeIndexesFromBfs[i]) && maxValuedEdgeIndexesFromBfs[i]!=img.id) {
+				if (!indexes.contains(maxValuedEdgeIndexesFromBfs[i]) && maxValuedEdgeIndexesFromBfs[i]!=img.id && indexes.size()<count) {
 					indexes.add(maxValuedEdgeIndexesFromBfs[i]);
 					CanceriousLogger.info("from bfs: "+maxValuedEdgeIndexesFromBfs[i]);
 				}
@@ -457,7 +457,7 @@ public class GraphManager {
 			Random r = new Random();
 			while (true) {/*for (int i = 0; i < FROM_RANDOM; i++) {*/
 				Integer random = r.nextInt(imageList.size());
-				if (!indexes.contains(random) && random!=img.id) {
+				if (!indexes.contains(random) && random!=img.id && indexes.size()<count) {
 					indexes.add(random);
 					CanceriousLogger.info("from random: "+random);
 				}

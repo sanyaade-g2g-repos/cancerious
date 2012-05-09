@@ -41,8 +41,8 @@ public class ConfigurationManager implements Serializable {
 			featureStorePath = "/feature_store";
 			dbStorePath = "/cancerious_store";
 			distributionFromFeature = 3;
-			distributionFromBFS = 1;
-			distributionFromRandom = 1;
+			distributionFromBFS = 0;
+			distributionFromRandom = 2;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -50,12 +50,14 @@ public class MatchSubImages extends JPanel {
 		nextImage();
 	}
 
-	public void saveAll() {
+	public void saveAll(boolean warn) {
 
 		List<SubImageMatch> subImageMatches = CanceriousMain.getGraphManager().getSubImageMatches();
 		SubImage headSubImage = imageToMatch.getShowImage().getSubImage();
 		if (!headSubImage.isValid()) {
-			CanceriousLogger.infoWithDisplay("Please select a region in head image first.");
+			if (warn) {
+				CanceriousLogger.infoWithDisplay("Please select a region in head image first.");
+			}
 			return;
 		}
 		int count = 0;
