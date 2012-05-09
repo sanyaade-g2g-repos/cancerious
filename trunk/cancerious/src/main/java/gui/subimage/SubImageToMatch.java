@@ -48,12 +48,12 @@ public class SubImageToMatch extends JPanel {
 	}
 
 	public void nextImage(){
-		saveAll();
+		CanceriousMain.getGuiManager().getMatchSubImages().saveAll(false);
 		CanceriousMain.getGuiManager().getMatchSubImages().nextImage();
 	}
 
 	public void saveAll(){
-		CanceriousMain.getGuiManager().getMatchSubImages().saveAll();
+		CanceriousMain.getGuiManager().getMatchSubImages().saveAll(true);
 	}
 
 	public ShowImage getShowImage() {
